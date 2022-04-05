@@ -43,11 +43,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Push Notifications',
+      title: 'Notifications',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Push Notification\'s'),
+      home: const MyHomePage(title: 'Push   Notification\'s'),
     );
   }
 }
