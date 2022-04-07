@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "969315233418",
+    "project_id": "chatting-using-firebase-dbe65",
+    "storage_bucket": "chatting-using-firebase-dbe65.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:969315233418:android:96e645e2121cd7c439c773",
+        "android_client_info": {
+          "package_name": "com.example.chatting_using_firebase"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "969315233418-llc43trn9sgkv3tlr400paebfcbdele7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsBXOPUgdwWnLFQm1_HrsNpR218OElWxc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "969315233418-llc43trn9sgkv3tlr400paebfcbdele7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
