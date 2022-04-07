@@ -87,7 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ));
       }
     });
-
+/// firebase messaging when app is open  
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       print('A new onMessageOpenedApp event was published!');
       RemoteNotification? notification = message.notification;
