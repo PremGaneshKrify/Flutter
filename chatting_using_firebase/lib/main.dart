@@ -1,23 +1,33 @@
-import 'package:chatting_using_firebase/views/sigin_screen.dart';
-import 'package:chatting_using_firebase/views/signup_screen.dart';
+import 'package:chatting_using_firebase/helper/authenticate.dart';
+import 'package:chatting_using_firebase/views/chatrooms_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  late bool userIsLoggedIn = true;
+
+  MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
+        debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData(
           scaffoldBackgroundColor: Colors.grey[200],
           primarySwatch: Colors.blue,
         ),
-        home:  const SiginUpscreen());
+        // ignore: unnecessary_null_comparison
+        home: userIsLoggedIn != null
+            ? userIsLoggedIn
+                ? const ChatRoom()
+                : const Authenticate()
+            : const Center(child: Authenticate()));
   }
 }
