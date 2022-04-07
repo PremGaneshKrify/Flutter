@@ -43,11 +43,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Push Notifications',
+      title: 'Notifications',
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Push Notification\'s'),
+      home: const MyHomePage(title: 'Push   Notification\'s'),
     );
   }
 }
@@ -87,7 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ));
       }
     });
-
+/// firebase messaging when app is open  
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       print('A new onMessageOpenedApp event was published!');
       RemoteNotification? notification = message.notification;
