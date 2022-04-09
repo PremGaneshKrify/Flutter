@@ -5,8 +5,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthServices {
   Usermodel? _userFromFirebaseUser(User user) {
-    // ignore: unnecessary_null_comparison
-    return user != null ? Usermodel(uid: user.uid) : null;
+    log("Auth services called....................");
+    log(Usermodel(uid: user.uid)
+        .toString()); // ignore: unnecessary_null_comparison
+    return  Usermodel(uid: user.uid) ;
+    log("Auth services called....................");
   }
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
