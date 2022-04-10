@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
 class SignInScreen extends StatefulWidget {
-  const SignInScreen({Key? key}) : super(key: key);
+  final Function toggleView;
 
+  // ignore: use_key_in_widget_constructors
+  const SignInScreen(this.toggleView);
   @override
   State<SignInScreen> createState() => _SignInScreenState();
 }
@@ -50,7 +52,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         borderRadius: BorderRadius.circular(250)),
                     height: MediaQuery.of(context).size.height * 0.08,
                     width: MediaQuery.of(context).size.width * 0.8,
-                    child: const Center(child: Text("Sign up")),
+                    child: const Center(child: Text("Sign In")),
                   ),
                   const SizedBox(
                     height: 10,
@@ -68,11 +70,13 @@ class _SignInScreenState extends State<SignInScreen> {
                     padding: const EdgeInsets.all(8.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
-                      children: const [
-                        Text("Don't have a account"),
+                      children: [
+                        const Text("Don't have a account"),
                         InkWell(
-                        
-                          child: Text(
+                          onTap: () {
+                            widget.toggleView();
+                          },
+                          child: const Text(
                             "Register here",
                             style:
                                 TextStyle(decoration: TextDecoration.underline),

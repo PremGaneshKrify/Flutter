@@ -3,38 +3,37 @@ import 'dart:developer';
 import 'package:chatting_using_firebase/model/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-class AuthMethods {
+class AuthServices {
+  Usermodel? _userFromFirebaseUser(User user) {
+    // ignore: unnecessary_null_comparison
+    return user != null ? Usermodel(uid: user.uid) : null;
+  }
+
   final FirebaseAuth _auth = FirebaseAuth.instance;
-
-  User? _userFromFirebaseUser(FirebaseUser user) {
-    return user != null ? User(userId: user.uid) : null;
-  }
-
-  Future signInWithEmailAndPassword(String email, String password) async {
+  Future signinWithEmailAndPassword(String email, String password) async {
     try {
-      AuthResult result = await _auth.signInWithEmailAndPassword(
+      UserCredential result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
-      FirebaseUser user = result.user;
-      return _userFromFirebaseUser(user);
+      log("we are in signupwithemail in side auth file");
+      User? firebaseUser = result.user;
+      return _userFromFirebaseUser(firebaseUser!);
     } catch (e) {
       log(e.toString());
-      return null;
     }
   }
 
-  Future signUpWithEmailAndPassword(String email, String password) async {
+  Future signUpWithEmailAndPassoword(String email, String password) async {
     try {
-      AuthResult result = await _auth.createUserWithEmailAndPassword(
+      UserCredential result = await _auth.createUserWithEmailAndPassword(
           email: email, password: password);
-      FirebaseUser user = result.user;
-      return _userFromFirebaseUser(user);
+      User? firebaseUser = result.user;
+      return _userFromFirebaseUser(firebaseUser!);
     } catch (e) {
       log(e.toString());
-      return null;
     }
   }
 
-  Future resetpass(String email) async {
+  Future resetPassword(String email) async {
     try {
       return await _auth.sendPasswordResetEmail(email: email);
     } catch (e) {
@@ -44,7 +43,7 @@ class AuthMethods {
 
   Future signOut() async {
     try {
-      return _auth.signOut();
+      return await _auth.signOut();
     } catch (e) {
       log(e.toString());
     }
