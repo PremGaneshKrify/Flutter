@@ -1,7 +1,8 @@
-import 'package:chatting_using_firebase/helper/authenticate.dart';
 import 'package:chatting_using_firebase/services/auth.dart';
 import 'package:chatting_using_firebase/views/searchscreen.dart';
 import 'package:flutter/material.dart';
+
+import '../helper/authenticate.dart';
 
 class ChatRoom extends StatefulWidget {
   const ChatRoom({Key? key}) : super(key: key);
@@ -27,6 +28,10 @@ class _ChatRoomState extends State<ChatRoom> {
                   builder: (context) => const Authenticate(),
                 ),
               );
+
+              // authServices
+              //     .signUpWithEmailAndPassoword("asdj11@gmail.com", "fsdkjk")
+              //     .then((value) async {});
             }),
             child: const Icon(Icons.exit_to_app),
           )

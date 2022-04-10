@@ -15,4 +15,14 @@ class DatabaseMethods {
       log(e.toString());
     });
   }
+
+  createChatRoom(String chatRoomId, chatRoomMap) {
+    FirebaseFirestore.instance
+        .collection("ChatRoom")
+        .doc(chatRoomId)
+        .set(chatRoomMap)
+        .catchError((e) {
+      log(e.toString());
+    });
+  }
 }

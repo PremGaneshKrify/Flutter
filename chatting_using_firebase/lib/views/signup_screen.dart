@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:chatting_using_firebase/helper/helperfunctions.dart';
 import 'package:chatting_using_firebase/services/auth.dart';
 import 'package:chatting_using_firebase/services/database.dart';
 import 'package:chatting_using_firebase/views/chatrooms_screen.dart';
@@ -18,37 +19,42 @@ class _SignUpscreenState extends State<SignUpscreen> {
   AuthServices authServices = AuthServices();
   DatabaseMethods databaseMethods = DatabaseMethods();
   bool isLoading = false;
-  final fromKey = GlobalKey<FormState>();
+  final formKey = GlobalKey<FormState>();
   TextEditingController userNameTextEditingcontroller = TextEditingController();
   TextEditingController emailTextEditingcontroller = TextEditingController();
   TextEditingController passwordTextEditingcontroller = TextEditingController();
 
   signMeUp() async {
-    if (fromKey.currentState!.validate()) {
+    if (formKey.currentState!.validate() == false) {
+      log("signMeUp entered");
       setState(() {
         isLoading = true;
       });
+      authServices
+          .signUpWithEmailAndPassoword(emailTextEditingcontroller.text,
+              passwordTextEditingcontroller.text)
+          .then((value) async {
+        // log(value);
+        print("_______________________________________");
+        print(value);
+
+        Map<String, String> userInfoMap = {
+          "name": userNameTextEditingcontroller.text,
+          "email": emailTextEditingcontroller.text
+        };
+        HelperFunctions.saveUserEmailSharedPreference(
+            emailTextEditingcontroller.text);
+        HelperFunctions.saveUserNameSharedPreference(
+            userNameTextEditingcontroller.text);
+        await databaseMethods.uploadUserInfo(userInfoMap);
+        HelperFunctions.saveUserLoggedInSharedPreference(true);
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => const ChatRoom()));
+      });
     }
-    Map<String, String> userInfoMap = {
-      "name": userNameTextEditingcontroller.text,
-      "email": emailTextEditingcontroller.text
-    };
-    log("before entering into  authServices");
-    log("________________before upload________________________");
-    await databaseMethods.uploadUserInfo(userInfoMap);
-    log("________________after upload________________________");
-    authServices
-        .signUpWithEmailAndPassoword(
-            emailTextEditingcontroller.text, passwordTextEditingcontroller.text)
-        .then((value) {
-      log("user id ${value.uid}");
+    log("not enterd if case");
 
-      log(emailTextEditingcontroller.text);
-      log(passwordTextEditingcontroller.text);
-
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => const ChatRoom()));
-    });
+    log("${formKey.currentState!.validate()}");
   }
 
   @override
@@ -67,7 +73,7 @@ class _SignUpscreenState extends State<SignUpscreen> {
                 child: SizedBox(
                   height: MediaQuery.of(context).size.height - 50,
                   child: Form(
-                    key: fromKey,
+                    key: formKey,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -109,6 +115,17 @@ class _SignUpscreenState extends State<SignUpscreen> {
                               hintStyle: TextStyle(color: Colors.blue)),
                         ),
                         TextFormField(
+                          onChanged: (val) {
+                            final trimVal = val.trim();
+                            if (val != trimVal) {
+                              setState(() {
+                                emailTextEditingcontroller.text = trimVal;
+                                emailTextEditingcontroller.selection =
+                                    TextSelection.fromPosition(
+                                        TextPosition(offset: trimVal.length));
+                              });
+                            }
+                          },
                           validator: (value) {
                             return value!.length > 6
                                 ? ''
