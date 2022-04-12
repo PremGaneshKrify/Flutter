@@ -10,7 +10,6 @@ class SignUpscreen extends StatefulWidget {
 
   // ignore: use_key_in_widget_constructors
   const SignUpscreen(this.toggleView);
-
   @override
   State<SignUpscreen> createState() => _SignUpscreenState();
 }
@@ -25,7 +24,7 @@ class _SignUpscreenState extends State<SignUpscreen> {
   TextEditingController passwordTextEditingcontroller = TextEditingController();
 
   signMeUp() async {
-    if (formKey.currentState!.validate() == false) {
+    if (formKey.currentState!.validate()) {
       log("signMeUp entered");
       setState(() {
         isLoading = true;
@@ -34,9 +33,7 @@ class _SignUpscreenState extends State<SignUpscreen> {
           .signUpWithEmailAndPassoword(emailTextEditingcontroller.text,
               passwordTextEditingcontroller.text)
           .then((value) async {
-        // log(value);
-        print("_______________________________________");
-        print(value);
+        log(value.toString());
 
         Map<String, String> userInfoMap = {
           "name": userNameTextEditingcontroller.text,
@@ -54,7 +51,7 @@ class _SignUpscreenState extends State<SignUpscreen> {
     }
     log("not enterd if case");
 
-    log("${formKey.currentState!.validate()}");
+    log(formKey.currentState!.validate().toString());
   }
 
   @override
@@ -81,7 +78,7 @@ class _SignUpscreenState extends State<SignUpscreen> {
                           validator: (value) {
                             return value!.isEmpty || value.length < 4
                                 ? "Plase enter valid user name"
-                                : '';
+                                : null;
                           },
                           controller: userNameTextEditingcontroller,
                           decoration: const InputDecoration(
@@ -93,7 +90,7 @@ class _SignUpscreenState extends State<SignUpscreen> {
                             return RegExp(
                                         r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                                     .hasMatch(value!)
-                                ? ''
+                                ? null
                                 : "Please Enter valid Email";
                           },
                           controller: emailTextEditingcontroller,
@@ -128,7 +125,7 @@ class _SignUpscreenState extends State<SignUpscreen> {
                           },
                           validator: (value) {
                             return value!.length > 6
-                                ? ''
+                                ? null
                                 : "Please enter  length of 8 charater password";
                           },
                           controller: passwordTextEditingcontroller,

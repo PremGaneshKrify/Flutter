@@ -1,4 +1,8 @@
+import 'dart:developer';
+
+import 'package:chatting_using_firebase/helper/constants.dart';
 import 'package:chatting_using_firebase/services/database.dart';
+import 'package:chatting_using_firebase/views/conversation_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
@@ -23,9 +27,6 @@ class _SearchscreenState extends State<Searchscreen> {
         searchResult = true;
       });
       searchsnapshot = value;
-
-      // log("diret");
-      // log("${searchsnapshot.docs[0]["name"]}");
     });
   }
 
@@ -37,16 +38,66 @@ class _SearchscreenState extends State<Searchscreen> {
         itemBuilder: (BuildContext context, int index) {
           return SearchTile(
             email: searchsnapshot.docs[0]["email"],
-            username: searchsnapshot.docs[0]["name"],
+            userName: searchsnapshot.docs[0]["name"],
           );
+
+          // return SearchTile(
+          //   searchsnapshot.docs[0]["email"],
+          //   username: searchsnapshot.docs[0]["name"],
+          // );
         });
   }
 
   createChatroomAndStartConversation(String userName) {
-   List<String> user =[];
-   
-  //  databaseMethods.createChatRoom(chatRoomId, chatRoomMap)
+    List<String> user = [userName, Constants.myName];
+    log("This is My name");
+    log(Constants.myName.toString());
+    String chatRoomId = getChatRoomId(userName, Constants.myName);
+    Map<String, dynamic> chatRoomMap = {
+      "users": userName,
+      "chatRoomId": chatRoomId
+    };
+    databaseMethods.createChatRoom(chatRoomId, chatRoomMap);
+    Navigator.pushReplacement(context,
+        MaterialPageRoute(builder: (context) => const ConversationScreen()));
   }
+
+  // ignore: non_constant_identifier_names
+  Widget SearchTile({required String email, required String userName}) {
+    return Container(
+        color: Colors.grey[100],
+        height: 100,
+        width: 100,
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Row(
+            children: [
+              Column(
+                children: [
+                  Text(
+                    userName,
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  Text(
+                    email,
+                    style: const TextStyle(fontSize: 18),
+                  )
+                ],
+              ),
+              const Spacer(),
+              ElevatedButton(
+                  onPressed: () {
+                    createChatroomAndStartConversation(userName);
+                  },
+                  child: const Text("MESSAGE"))
+            ],
+          ),
+        ));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -89,43 +140,12 @@ class _SearchscreenState extends State<Searchscreen> {
   }
 }
 
-class SearchTile extends StatelessWidget {
-  final String email;
-
-  final String username;
-
-  const SearchTile({Key? key, required this.username, required this.email})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        color: Colors.grey[100],
-        height: 100,
-        width: 100,
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Row(
-            children: [
-              Column(
-                children: [
-                  Text(
-                    username,
-                    style: const TextStyle(fontSize: 18),
-                  ),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  Text(
-                    email,
-                    style: const TextStyle(fontSize: 18),
-                  )
-                ],
-              ),
-              const Spacer(),
-              ElevatedButton(onPressed: () {}, child: const Text("MESSAGE"))
-            ],
-          ),
-        ));
+getChatRoomId(String a, String b) {
+  //
+  if (a.substring(0, 1).codeUnitAt(0) > b.substring(0, 1).codeUnitAt(0)) {
+    // print(b a);
+    return "$b$a";
+  } else {
+    return "$a$b";
   }
 }

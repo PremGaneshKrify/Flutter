@@ -1,3 +1,5 @@
+import 'package:chatting_using_firebase/helper/constants.dart';
+import 'package:chatting_using_firebase/helper/helperfunctions.dart';
 import 'package:chatting_using_firebase/services/auth.dart';
 import 'package:chatting_using_firebase/views/searchscreen.dart';
 import 'package:flutter/material.dart';
@@ -11,8 +13,21 @@ class ChatRoom extends StatefulWidget {
   State<ChatRoom> createState() => _ChatRoomState();
 }
 
+// ignore: non_constant_identifier_names
+
 class _ChatRoomState extends State<ChatRoom> {
   AuthServices authServices = AuthServices();
+  @override
+  void initState() {
+    getUserInfo();
+    super.initState();
+  }
+
+  getUserInfo() async {
+    (await HelperFunctions.getUserNameSharedPreference()
+        .then((value) => Constants.myName = value.toString()));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,16 +37,15 @@ class _ChatRoomState extends State<ChatRoom> {
           GestureDetector(
             onTap: (() {
               authServices.signOut();
+              setState(() {
+                HelperFunctions.saveUserLoggedInSharedPreference(false);
+              });
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
                   builder: (context) => const Authenticate(),
                 ),
               );
-
-              // authServices
-              //     .signUpWithEmailAndPassoword("asdj11@gmail.com", "fsdkjk")
-              //     .then((value) async {});
             }),
             child: const Icon(Icons.exit_to_app),
           )

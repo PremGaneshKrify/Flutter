@@ -9,7 +9,6 @@ class AuthServices {
     log(Usermodel(uid: user.uid)
         .toString()); // ignore: unnecessary_null_comparison
     return  Usermodel(uid: user.uid) ;
-    log("Auth services called....................");
   }
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
