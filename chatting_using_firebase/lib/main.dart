@@ -23,6 +23,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  var v;
   bool? userIsLoggedIn;
   @override
   void initState() {
@@ -31,6 +32,7 @@ class _MyAppState extends State<MyApp> {
   }
 
   getLoggedInState() async {
+    v = await HelperFunctions.getUserNameSharedPreference();
     await HelperFunctions.getUserLoggedInSharedPreference().then((value) {
       setState(() {
         userIsLoggedIn = value;
@@ -50,11 +52,12 @@ class _MyAppState extends State<MyApp> {
         ),
         home: userIsLoggedIn != null
             ? userIsLoggedIn == true
-                ? const ChatRoom()
+                ? ChatRoom(
+                    userNameFromSignin: v, 
+                  )
                 : const Authenticate()
-            : Container(
-                child: const Center(
+            : const Center(
                 child: Authenticate(),
-              )));
+              ));
   }
 }

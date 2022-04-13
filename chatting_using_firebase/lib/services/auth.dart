@@ -16,7 +16,7 @@ class AuthServices {
     try {
       UserCredential result = await _auth.signInWithEmailAndPassword(
           email: email, password: password);
-      log("we are in signupwithemail in side auth file");
+      log("we are in signinWithEmailAndPassword in side auth file");
       User? firebaseUser = result.user;
       return _userFromFirebaseUser(firebaseUser!);
     } catch (e) {

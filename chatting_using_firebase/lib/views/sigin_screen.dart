@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:chatting_using_firebase/services/auth.dart';
 import 'package:chatting_using_firebase/services/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -14,19 +16,26 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
-  late QuerySnapshot snapshotUserInfo;
+  QuerySnapshot? snapshotUserInfo;
   DatabaseMethods databaseMethods = DatabaseMethods();
   AuthServices authServices = AuthServices();
   final formKey = GlobalKey<FormState>();
   TextEditingController emailTextEditingcontroller = TextEditingController();
   TextEditingController passwordTextEditingcontroller = TextEditingController();
   bool isLoading = false;
+  String? usernamefromsignin;
   signIn() {
     if (formKey.currentState!.validate()) {
-      HelperFunctions.saveUserEmailSharedPreference(
-          emailTextEditingcontroller.text);
+      log("_____________________________________________----");
+      log(" if logic ${formKey.currentState!.validate()}");
+      log("user entered data");
+      log(emailTextEditingcontroller.text);
+      log(passwordTextEditingcontroller.text);
+
       setState(() {
         isLoading = true;
+        HelperFunctions.saveUserEmailSharedPreference(
+            emailTextEditingcontroller.text);
         HelperFunctions.saveUserLoggedInSharedPreference(true);
       });
 
@@ -34,16 +43,28 @@ class _SignInScreenState extends State<SignInScreen> {
           .signinWithEmailAndPassword(emailTextEditingcontroller.text,
               passwordTextEditingcontroller.text)
           .then((value) {
+        print("FIREBASE RESPONSE...............");
+        print(value);
+
         if (value != null) {
           databaseMethods
               .getUserByUserEmail(emailTextEditingcontroller.text)
-              .then((value) {
+              .then((value) async {
             snapshotUserInfo = value;
-            HelperFunctions.saveUserEmailSharedPreference(
-                snapshotUserInfo.docs[0]["name"]);
+            log("USER INFO AFTER SIGN IN.................");
+            log(snapshotUserInfo.toString());
+            log(snapshotUserInfo!.docs.toString());
+            log(snapshotUserInfo!.docs[0]["name"]);
+            HelperFunctions.saveUserNameSharedPreference(
+                snapshotUserInfo?.docs[0]["name"]);
+            print(usernamefromsignin);
           });
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => const ChatRoom()));
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => ChatRoom(
+                        userNameFromSignin: usernamefromsignin.toString(),
+                      )));
         }
       });
     }

@@ -28,29 +28,35 @@ class _SignUpscreenState extends State<SignUpscreen> {
       log("signMeUp entered");
       setState(() {
         isLoading = true;
+        HelperFunctions.saveUserLoggedInSharedPreference(true);
+        HelperFunctions.saveUserEmailSharedPreference(
+            emailTextEditingcontroller.text);
+        HelperFunctions.saveUserNameSharedPreference(
+            userNameTextEditingcontroller.text);
       });
       authServices
           .signUpWithEmailAndPassoword(emailTextEditingcontroller.text,
               passwordTextEditingcontroller.text)
           .then((value) async {
+        log("Response from firebase signup:");
         log(value.toString());
 
         Map<String, String> userInfoMap = {
           "name": userNameTextEditingcontroller.text,
           "email": emailTextEditingcontroller.text
         };
-        HelperFunctions.saveUserEmailSharedPreference(
-            emailTextEditingcontroller.text);
-        HelperFunctions.saveUserNameSharedPreference(
-            userNameTextEditingcontroller.text);
+
         await databaseMethods.uploadUserInfo(userInfoMap);
-        HelperFunctions.saveUserLoggedInSharedPreference(true);
+
         Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => const ChatRoom()));
+            context,
+            MaterialPageRoute(
+                builder: (context) => ChatRoom(
+                      userNameFromSignin: userNameTextEditingcontroller.text,
+                    )));
       });
     }
     log("not enterd if case");
-
     log(formKey.currentState!.validate().toString());
   }
 

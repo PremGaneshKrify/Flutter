@@ -49,17 +49,20 @@ class _SearchscreenState extends State<Searchscreen> {
   }
 
   createChatroomAndStartConversation(String userName) {
-    List<String> user = [userName, Constants.myName];
     log("This is My name");
-    log(Constants.myName.toString());
+    print(Constants.myName.toString());
     String chatRoomId = getChatRoomId(userName, Constants.myName);
     Map<String, dynamic> chatRoomMap = {
       "users": userName,
       "chatRoomId": chatRoomId
     };
     databaseMethods.createChatRoom(chatRoomId, chatRoomMap);
-    Navigator.pushReplacement(context,
-        MaterialPageRoute(builder: (context) => const ConversationScreen()));
+    Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ConversationScreen(
+                  chatRoomId: chatRoomId.toString(),
+                )));
   }
 
   // ignore: non_constant_identifier_names
@@ -90,6 +93,7 @@ class _SearchscreenState extends State<Searchscreen> {
               const Spacer(),
               ElevatedButton(
                   onPressed: () {
+                    print("sending user name to create chat room search result $userName");
                     createChatroomAndStartConversation(userName);
                   },
                   child: const Text("MESSAGE"))
