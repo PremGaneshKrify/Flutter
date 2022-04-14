@@ -8,6 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../helper/authenticate.dart';
+import 'conversation_screen.dart';
 
 class ChatRoom extends StatefulWidget {
   const ChatRoom({
@@ -22,6 +23,51 @@ class _ChatRoomState extends State<ChatRoom> {
   String? user;
   AuthServices authServices = AuthServices();
   HelperFunctions helperFunctions = HelperFunctions();
+
+  // chatRoomList() {
+  //   final Stream<QuerySnapshot> chatRoomStream = FirebaseFirestore.instance
+  //       .collection("ChatRoom")
+  //       .where("users", arrayContains: Constants.myName)
+  //       .snapshots();
+  //   return StreamBuilder<QuerySnapshot>(
+  //       stream: chatRoomStream,
+  //       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+  //         if (snapshot.hasError) {
+  //           return const Text('Something went wrong');
+  //         }
+
+  //         if (snapshot.connectionState == ConnectionState.waiting) {
+  //           return const Text("Loading");
+  //         }
+
+  //         return ListView(
+  //           children: snapshot.data!.docs.map((DocumentSnapshot document) {
+  //             Map<String, dynamic> data =
+  //                 document.data()! as Map<String, dynamic>;
+  //             return Padding(
+  //               padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
+  //               child: Container(
+  //                 height: 50,
+  //                 width: 30,
+  //                 decoration: const BoxDecoration(color: Colors.grey),
+  //                 child: Center(
+  //                     child: Row(
+  //                   children: [
+  //                     Container(
+  //                       child: Text("${data["users"][0]}"),
+  //                     ),
+  //                     Text(
+  //                       "${data["users"][0]}",
+  //                       style: const TextStyle(fontSize: 20),
+  //                     ),
+  //                   ],
+  //                 )),
+  //               ),
+  //             );
+  //           }).toList(),
+  //         );
+  //       });
+  // }
 
   chatRoomList() {
     final Stream<QuerySnapshot> chatRoomStream = FirebaseFirestore.instance
@@ -43,8 +89,12 @@ class _ChatRoomState extends State<ChatRoom> {
             children: snapshot.data!.docs.map((DocumentSnapshot document) {
               Map<String, dynamic> data =
                   document.data()! as Map<String, dynamic>;
-              return Container(
-                child: Text("${data["chatRoomId"]}"),
+              return MessageTile(
+                ChatRoomID: data["chatRoomId"],
+                userName: data["chatRoomId"]
+                    .toString()
+                    .replaceAll("-", "")
+                    .replaceAll(Constants.myName, ''),
               );
             }).toList(),
           );
@@ -104,6 +154,59 @@ class _ChatRoomState extends State<ChatRoom> {
       ),
       body: Container(
         child: chatRoomList(),
+      ),
+    );
+  }
+}
+
+class MessageTile extends StatelessWidget {
+  final String userName;
+  final String ChatRoomID;
+  const MessageTile(
+      {Key? key, required this.userName, required this.ChatRoomID})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: (() {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ConversationScreen(
+              chatRoomId: ChatRoomID.toString(),
+              searchResultName: userName,
+            ),
+          ),
+        );
+      }),
+      child: Padding(
+        padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
+        child: SizedBox(
+          height: 50,
+          width: 30,
+          child: Center(
+              child: Row(
+            children: [
+              Container(
+                height: 50,
+                width: 50,
+                decoration: BoxDecoration(
+                    color: Colors.grey,
+                    borderRadius: BorderRadius.circular(50)),
+                child:
+                    Center(child: Text(userName.substring(0, 1).toUpperCase())),
+              ),
+              const SizedBox(
+                width: 10,
+              ),
+              Text(
+                userName,
+                style: const TextStyle(fontSize: 20),
+              ),
+            ],
+          )),
+        ),
       ),
     );
   }

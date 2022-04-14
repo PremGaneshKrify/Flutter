@@ -54,12 +54,14 @@ class _SearchscreenState extends State<Searchscreen> {
     };
     databaseMethods.createChatRoom(chatRoomId, chatRoomMap);
     Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-            builder: (context) => ConversationScreen(
-                  chatRoomId: chatRoomId.toString(),
-                  searchResultName: userName,
-                )));
+      context,
+      MaterialPageRoute(
+        builder: (context) => ConversationScreen(
+          chatRoomId: chatRoomId.toString(),
+          searchResultName: userName,
+        ),
+      ),
+    );
   }
 
   // ignore: non_constant_identifier_names
