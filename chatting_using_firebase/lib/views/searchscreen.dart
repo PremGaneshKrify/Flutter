@@ -26,7 +26,7 @@ class _SearchscreenState extends State<Searchscreen> {
         searchsnapshot = value;
         searchResult = true;
       });
-    //  searchsnapshot = value;
+      //  searchsnapshot = value;
     });
   }
 
@@ -40,17 +40,16 @@ class _SearchscreenState extends State<Searchscreen> {
             email: searchsnapshot.docs[0]["email"],
             userName: searchsnapshot.docs[0]["name"],
           );
-
-        
         });
   }
 
   createChatroomAndStartConversation(String userName) {
     log("This is My name");
+    List<String> users = [userName, Constants.myName];
     print(Constants.myName.toString());
     String chatRoomId = getChatRoomId(userName, Constants.myName);
     Map<String, dynamic> chatRoomMap = {
-      "users": userName,
+      "users": users,
       "chatRoomId": chatRoomId
     };
     databaseMethods.createChatRoom(chatRoomId, chatRoomMap);
@@ -58,9 +57,8 @@ class _SearchscreenState extends State<Searchscreen> {
         context,
         MaterialPageRoute(
             builder: (context) => ConversationScreen(
-                  chatRoomId: chatRoomId.toString(), searchResultName: userName
-
-                  ,
+                  chatRoomId: chatRoomId.toString(),
+                  searchResultName: userName,
                 )));
   }
 
@@ -92,7 +90,8 @@ class _SearchscreenState extends State<Searchscreen> {
               const Spacer(),
               ElevatedButton(
                   onPressed: () {
-                    print("sending user name to create chat room search result $userName");
+                    print(
+                        "sending user name to create chat room search result $userName");
                     createChatroomAndStartConversation(userName);
                   },
                   child: const Text("MESSAGE"))
@@ -147,8 +146,8 @@ getChatRoomId(String a, String b) {
   //
   if (a.substring(0, 1).codeUnitAt(0) > b.substring(0, 1).codeUnitAt(0)) {
     // print(b a);
-    return "$b$a";
+    return "$b-$a";
   } else {
-    return "$a$b";
+    return "$a-$b";
   }
 }
