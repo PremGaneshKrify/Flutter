@@ -47,14 +47,17 @@ class _ConversationScreenState extends State<ConversationScreen> {
             Map<String, dynamic> data =
                 document.data()! as Map<String, dynamic>;
             return Padding(
-              padding: const EdgeInsets.only(left: 10),
-              child: SizedBox(
-                  height: 25,
-                  width: 25,
-                  child: Text(
-                    "${data['message']}",
-                    style: const TextStyle(color: Colors.white, fontSize: 20),
-                  )),
+              padding: const EdgeInsets.all(8.0),
+              child: Container(
+                alignment: data["sendBy"] == Constants.myName ? Alignment.centerLeft : Alignment.centerRight,
+                child: SizedBox(
+                    height: 25,
+                    
+                    child: Text(
+                      "${data['message']}",
+                      style: const TextStyle(color: Colors.white, fontSize: 16),
+                    )),
+              ),
             );
           }).toList(),
         );

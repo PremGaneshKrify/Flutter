@@ -62,4 +62,11 @@ class DatabaseMethods {
         .orderBy("time")
         .snapshots(includeMetadataChanges: true);
   }
+
+  getChatRoom(String userName) {
+    return FirebaseFirestore.instance
+        .collection("ChatRoom")
+        .where("users", arrayContains: userName)
+        .snapshots();
+  }
 }
