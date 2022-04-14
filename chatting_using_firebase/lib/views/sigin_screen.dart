@@ -59,12 +59,8 @@ class _SignInScreenState extends State<SignInScreen> {
                 snapshotUserInfo?.docs[0]["name"]);
             print(usernamefromsignin);
           });
-          Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => ChatRoom(
-                        userNameFromSignin: usernamefromsignin.toString(),
-                      )));
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => const ChatRoom()));
         }
       });
     }

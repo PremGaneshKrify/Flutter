@@ -18,7 +18,10 @@ class DatabaseMethods {
   }
 
   uploadUserInfo(userMap) {
-    FirebaseFirestore.instance.collection('users').add(userMap).catchError((e) {
+    return FirebaseFirestore.instance
+        .collection('users')
+        .add(userMap)
+        .catchError((e) {
       log(e.toString());
     });
   }
@@ -34,7 +37,7 @@ class DatabaseMethods {
   }
 
   addConversationMessages(String chatRoomId, messageMap) {
-    return FirebaseFirestore.instance
+    FirebaseFirestore.instance
         .collection("ChatRoom")
         .doc(chatRoomId)
         .collection("chats")
@@ -44,18 +47,19 @@ class DatabaseMethods {
     });
   }
 
+  // getConversationMessages(String chatRoomId) async{
+  //   return FirebaseFirestore.instance
+  //       .collection("ChatRoom")
+  //       .doc(chatRoomId)
+  //       .collection("chats").orderBy("time")
+  //       .snapshots();
+  // }
   getConversationMessages(String chatRoomId) async {
-    print("CONVERSATION MESSAGES..................................");
-    print(FirebaseFirestore.instance
-        .collection("ChatRoom")
-        .doc(chatRoomId)
-        .collection("chats")
-        .snapshots());
-    print("CONVERSATION MESSAGES..................................");
     return FirebaseFirestore.instance
         .collection("ChatRoom")
         .doc(chatRoomId)
         .collection("chats")
-        .snapshots();
+        .orderBy("time")
+        .snapshots(includeMetadataChanges: true);
   }
 }

@@ -23,6 +23,7 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  // ignore: prefer_typing_uninitialized_variables
   var v;
   bool? userIsLoggedIn;
   @override
@@ -52,9 +53,7 @@ class _MyAppState extends State<MyApp> {
         ),
         home: userIsLoggedIn != null
             ? userIsLoggedIn == true
-                ? ChatRoom(
-                    userNameFromSignin: v, 
-                  )
+                ? const ChatRoom()
                 : const Authenticate()
             : const Center(
                 child: Authenticate(),

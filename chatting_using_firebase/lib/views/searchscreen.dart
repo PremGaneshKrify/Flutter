@@ -26,7 +26,7 @@ class _SearchscreenState extends State<Searchscreen> {
         searchsnapshot = value;
         searchResult = true;
       });
-      searchsnapshot = value;
+    //  searchsnapshot = value;
     });
   }
 
@@ -41,10 +41,7 @@ class _SearchscreenState extends State<Searchscreen> {
             userName: searchsnapshot.docs[0]["name"],
           );
 
-          // return SearchTile(
-          //   searchsnapshot.docs[0]["email"],
-          //   username: searchsnapshot.docs[0]["name"],
-          // );
+        
         });
   }
 
@@ -61,7 +58,9 @@ class _SearchscreenState extends State<Searchscreen> {
         context,
         MaterialPageRoute(
             builder: (context) => ConversationScreen(
-                  chatRoomId: chatRoomId.toString(),
+                  chatRoomId: chatRoomId.toString(), searchResultName: userName
+
+                  ,
                 )));
   }
 
