@@ -19,6 +19,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
   TextEditingController messageTextEditingController = TextEditingController();
   DatabaseMethods databaseMethods = DatabaseMethods();
   Stream? chatMessageStream;
+  final ScrollController _scrollController = ScrollController();
   @override
   void initState() {
     super.initState();
@@ -43,7 +44,8 @@ class _ConversationScreenState extends State<ConversationScreen> {
         }
 
         return ListView(
-          
+          controller: _scrollController,
+          shrinkWrap: false,
           children: snapshot.data!.docs.map((DocumentSnapshot document) {
             Map<String, dynamic> data =
                 document.data()! as Map<String, dynamic>;
@@ -57,7 +59,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                     height: 25,
                     child: Text(
                       "${data['message']}",
-                      style: const TextStyle(color: Colors.white, fontSize: 16),
+                      style: const TextStyle(color: Colors.black, fontSize: 16),
                     )),
               ),
             );
@@ -86,12 +88,17 @@ class _ConversationScreenState extends State<ConversationScreen> {
     return Scaffold(
       appBar: AppBar(title: Text(widget.searchResultName)),
       body: Container(
-        color: Colors.black,
+        color: Colors.transparent,
         child: Stack(
           children: [
             Container(
+              color: Colors.transparent,
+              height: MediaQuery.of(context).size.height * 0.8,
+              child: chatMessageList(),
+            ),
+            Container(
               alignment: Alignment.bottomCenter,
-              color: Colors.white,
+              color: Colors.transparent,
               child: Row(
                 children: [
                   Expanded(
@@ -105,6 +112,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                   ),
                   InkWell(
                     onTap: () {
+                    
                       sendMessage();
                     },
                     child: Padding(
@@ -119,11 +127,6 @@ class _ConversationScreenState extends State<ConversationScreen> {
                 ],
               ),
             ),
-            Container(
-              color: Colors.black,
-              height: MediaQuery.of(context).size.height * 0.8,
-              child: chatMessageList(),
-            )
           ],
         ),
       ),

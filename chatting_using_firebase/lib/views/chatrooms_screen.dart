@@ -197,12 +197,15 @@ class MessageTile extends StatelessWidget {
                 child:
                     Center(child: Text(userName.substring(0, 1).toUpperCase())),
               ),
-              const SizedBox(
-                width: 10,
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.03,
               ),
-              Text(
-                userName,
-                style: const TextStyle(fontSize: 20),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.7,
+                child: Text(
+                  userName,
+                  style: const TextStyle(fontSize: 20),
+                ),
               ),
             ],
           )),
