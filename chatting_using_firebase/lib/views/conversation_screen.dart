@@ -43,16 +43,18 @@ class _ConversationScreenState extends State<ConversationScreen> {
         }
 
         return ListView(
+          
           children: snapshot.data!.docs.map((DocumentSnapshot document) {
             Map<String, dynamic> data =
                 document.data()! as Map<String, dynamic>;
             return Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.only(left: 25, right: 25),
               child: Container(
-                alignment: data["sendBy"] == Constants.myName ? Alignment.centerLeft : Alignment.centerRight,
+                alignment: data["sendBy"] == Constants.myName
+                    ? Alignment.centerRight
+                    : Alignment.centerLeft,
                 child: SizedBox(
                     height: 25,
-                    
                     child: Text(
                       "${data['message']}",
                       style: const TextStyle(color: Colors.white, fontSize: 16),

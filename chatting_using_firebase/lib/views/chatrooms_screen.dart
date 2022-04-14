@@ -3,8 +3,8 @@ import 'dart:developer';
 import 'package:chatting_using_firebase/helper/constants.dart';
 import 'package:chatting_using_firebase/helper/helperfunctions.dart';
 import 'package:chatting_using_firebase/services/auth.dart';
-import 'package:chatting_using_firebase/services/database.dart';
 import 'package:chatting_using_firebase/views/searchscreen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../helper/authenticate.dart';
@@ -23,9 +23,36 @@ class _ChatRoomState extends State<ChatRoom> {
   AuthServices authServices = AuthServices();
   HelperFunctions helperFunctions = HelperFunctions();
 
+  chatRoomList() {
+    final Stream<QuerySnapshot> chatRoomStream = FirebaseFirestore.instance
+        .collection("ChatRoom")
+        .where("users", arrayContains: Constants.myName)
+        .snapshots();
+    return StreamBuilder<QuerySnapshot>(
+        stream: chatRoomStream,
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasError) {
+            return const Text('Something went wrong');
+          }
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Text("Loading");
+          }
+
+          return ListView(
+            children: snapshot.data!.docs.map((DocumentSnapshot document) {
+              Map<String, dynamic> data =
+                  document.data()! as Map<String, dynamic>;
+              return Container(
+                child: Text("${data["chatRoomId"]}"),
+              );
+            }).toList(),
+          );
+        });
+  }
+
   getUserInfo() async {
     var v = await HelperFunctions.getUserNameSharedPreference();
-
     setState(() {
       Constants.myName = v.toString();
     });
@@ -38,7 +65,7 @@ class _ChatRoomState extends State<ChatRoom> {
   Widget build(BuildContext context) {
     if (Constants.myName.isEmpty) {
       getUserInfo();
-
+      //  chatRoomList();
     }
     return Scaffold(
       appBar: AppBar(
@@ -75,7 +102,9 @@ class _ChatRoomState extends State<ChatRoom> {
         },
         child: const Icon(Icons.search),
       ),
-      body: Container(),
+      body: Container(
+        child: chatRoomList(),
+      ),
     );
   }
 }
