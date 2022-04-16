@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:developer';
 
 import 'package:chatting_using_firebase/helper/constants.dart';

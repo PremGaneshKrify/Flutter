@@ -161,8 +161,10 @@ class _ChatRoomState extends State<ChatRoom> {
 
 class MessageTile extends StatelessWidget {
   final String userName;
+  // ignore: non_constant_identifier_names
   final String ChatRoomID;
   const MessageTile(
+      // ignore: non_constant_identifier_names
       {Key? key, required this.userName, required this.ChatRoomID})
       : super(key: key);
 

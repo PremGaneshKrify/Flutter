@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:developer';
 
 import 'package:chatting_using_firebase/services/auth.dart';
@@ -42,7 +44,9 @@ class _SignInScreenState extends State<SignInScreen> {
       authServices
           .signinWithEmailAndPassword(emailTextEditingcontroller.text,
               passwordTextEditingcontroller.text)
+          // ignore: duplicate_ignore
           .then((value) {
+        // ignore: avoid_print
         print("FIREBASE RESPONSE...............");
         print(value);
 
