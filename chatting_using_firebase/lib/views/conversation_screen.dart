@@ -57,7 +57,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                     : Alignment.centerLeft,
                 child: SizedBox(
                     height: 25,
-                    child: Text(
+                   child: Text(
                       "${data['message']}",
                       style: const TextStyle(color: Colors.black, fontSize: 16),
                     )),
