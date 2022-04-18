@@ -1,7 +1,10 @@
+
 import 'package:chatting_using_firebase/helper/constants.dart';
+import 'package:chatting_using_firebase/main.dart';
 import 'package:chatting_using_firebase/services/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class ConversationScreen extends StatefulWidget {
   final String chatRoomId;
@@ -69,6 +72,26 @@ class _ConversationScreenState extends State<ConversationScreen> {
     );
   }
 
+  void showNotification() {
+    print("______________________________________________");
+    print(channel.id.toString());
+    print(channel.name.toString());
+    setState(() {});
+    flutterLocalNotificationsPlugin.show(
+      0,
+      "Testing ",
+      "How you doing  ",
+      
+      NotificationDetails(
+        android: AndroidNotificationDetails(channel.id, channel.name,
+            importance: Importance.high,
+            color: Colors.yellow,
+            playSound: true,
+            icon: '@mipmap/ic_launcher'),
+      ),
+    );
+  }
+
   sendMessage() {
     if (messageTextEditingController.text.isNotEmpty) {
       Map<String, dynamic> messageMap = {
@@ -112,8 +135,8 @@ class _ConversationScreenState extends State<ConversationScreen> {
                   ),
                   InkWell(
                     onTap: () {
-                    
                       sendMessage();
+                      showNotification();
                     },
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
