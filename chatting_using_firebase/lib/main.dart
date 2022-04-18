@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'helper/helperfunctions.dart';
+
 const AndroidNotificationChannel channel = AndroidNotificationChannel(
     'high_importance_channel', // id
     'High Importance Notifications', // title
@@ -21,39 +22,31 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
   print('A bg message just showed up :  ${message.messageId}');
 }
+
 Future<void> main() async {
-  
- 
   WidgetsFlutterBinding.ensureInitialized();
-  
   await Firebase.initializeApp();
- await flutterLocalNotificationsPlugin
+  await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(channel);
-
- await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
     alert: true,
     badge: true,
     sound: true,
-      );
+  );
   runApp(const MyApp());
 }
 
-
 class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
-
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
- 
   var v;
   bool? userIsLoggedIn;
- 
-
   getLoggedInState() async {
     v = await HelperFunctions.getUserNameSharedPreference();
     await HelperFunctions.getUserLoggedInSharedPreference().then((value) {
@@ -63,9 +56,9 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
- @override
+  @override
   void initState() {
-     getLoggedInState();
+    getLoggedInState();
     super.initState();
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       RemoteNotification? notification = message.notification;
@@ -79,7 +72,6 @@ class _MyAppState extends State<MyApp> {
               android: AndroidNotificationDetails(
                 channel.id,
                 channel.name,
-               
                 color: Colors.pink,
                 playSound: true,
                 icon: '@mipmap/ic_launcher',
@@ -87,10 +79,12 @@ class _MyAppState extends State<MyApp> {
             ));
       }
     });
-/// firebase messaging when app is open  
+
+    /// firebase messaging when app is open
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       print('A new onMessageOpenedApp event was published!');
       RemoteNotification? notification = message.notification;
+
       AndroidNotification? android = message.notification?.android;
       if (notification != null && android != null) {
         showDialog(
@@ -109,7 +103,6 @@ class _MyAppState extends State<MyApp> {
       }
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
