@@ -6,17 +6,17 @@ part of 'transcation.dart';
 // TypeAdapterGenerator
 // **************************************************************************
 
-class TranscationAdapter extends TypeAdapter<Transcation> {
+class TranscationAdapter extends TypeAdapter<Transaction> {
   @override
   final int typeId = 0;
 
   @override
-  Transcation read(BinaryReader reader) {
+  Transaction read(BinaryReader reader) {
     final numOfFields = reader.readByte();
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
-    return Transcation()
+    return Transaction()
       ..name = fields[0] as String
       ..createdDate = fields[1] as DateTime
       ..isExpense = fields[2] as bool
@@ -24,7 +24,7 @@ class TranscationAdapter extends TypeAdapter<Transcation> {
   }
 
   @override
-  void write(BinaryWriter writer, Transcation obj) {
+  void write(BinaryWriter writer, Transaction obj) {
     writer
       ..writeByte(4)
       ..writeByte(0)
