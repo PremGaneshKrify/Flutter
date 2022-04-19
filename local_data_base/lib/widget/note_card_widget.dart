@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:sqflite_database_example/model/note.dart';
@@ -25,6 +27,9 @@ class NoteCardWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     /// Pick colors from the accent colors based on index
     final color = _lightColors[index % _lightColors.length];
+    log("______________________________________________________--");
+   // print(_lightColors[index]);
+    print(_lightColors.length);
     final time = DateFormat.yMMMd().format(note.createdTime);
     final minHeight = getMinHeight(index);
 

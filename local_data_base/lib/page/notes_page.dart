@@ -41,8 +41,8 @@ class _NotesPageState extends State<NotesPage> {
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
           title: Text(
-            'Notes',
-            style: TextStyle(fontSize: 24),
+            '  Notes ',
+            style: TextStyle(fontSize: 26),
           ),
           actions: [Icon(Icons.search), SizedBox(width: 12)],
         ),
@@ -70,7 +70,7 @@ class _NotesPageState extends State<NotesPage> {
       );
 
   Widget buildNotes() => StaggeredGridView.countBuilder(
-        padding: EdgeInsets.all(8),
+        padding: EdgeInsets.all(10),
         itemCount: notes.length,
         staggeredTileBuilder: (index) => StaggeredTile.fit(2),
         crossAxisCount: 4,
