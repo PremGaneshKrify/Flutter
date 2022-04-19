@@ -1,7 +1,7 @@
 import 'package:hive/hive.dart';
 part "transcation.g.dart";
 @HiveType(typeId: 0)
-class Transcation {
+class Transaction {
   @HiveField(0)
   late String name;
   @HiveField(1)

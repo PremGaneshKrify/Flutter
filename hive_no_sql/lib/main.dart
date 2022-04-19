@@ -7,7 +7,7 @@ Future main() async {
   WidgetsFlutterBinding.ensureInitialized;
   await Hive.initFlutter();
   Hive.registerAdapter(TranscationAdapter());
-  await Hive.openBox<Transcation>("transcation");
+  await Hive.openBox<Transaction>("transcation");
   runApp(const MyApp());
 }
 
@@ -39,9 +39,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   @override
   Widget build(BuildContext context) => MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Hive Expenses Tracker',
-        theme: ThemeData(primarySwatch: Colors.indigo),
-        home: const TransactionPage(),
+        home: TransactionPage(),
       );
 }
