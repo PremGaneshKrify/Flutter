@@ -3,8 +3,6 @@ import 'package:image_picker_example/widget/asset_image_widget.dart';
 import 'package:image_picker_example/widget/file_memory_image_widget.dart';
 import 'package:image_picker_example/widget/network_image_widget.dart';
 
-
-
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -45,15 +43,15 @@ class _MainPageState extends State<MainPage> {
           items: const [
             BottomNavigationBarItem(
               icon: Text('Image'),
-              label:'Network',
+              label: 'Network',
             ),
             BottomNavigationBarItem(
               icon: Text('Image'),
-            label: 'Asset', 
+              label: 'Asset',
             ),
             BottomNavigationBarItem(
               icon: Text('Image'),
-            label: 'Memory/File',
+              label: 'Memory/File',
             ),
           ],
           onTap: (int index) => setState(() => this.index = index),
