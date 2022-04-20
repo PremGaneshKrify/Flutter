@@ -23,7 +23,8 @@ class _TransactionDialogState extends State<TransactionDialog> {
   final amountController = TextEditingController();
   File? userimage;
   bool isExpense = true;
-  bool onpressedb = false;
+
+  bool onpressedbutton = false;
 
   @override
   void initState() {
@@ -59,14 +60,14 @@ class _TransactionDialogState extends State<TransactionDialog> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              const SizedBox(height: 8),
+              const SizedBox(height: 6),
               buildName(),
-              const SizedBox(height: 8),
+              const SizedBox(height: 6),
               buildAmount(),
-              const SizedBox(height: 8),
+              const SizedBox(height: 5),
               buildRadioButtons(),
-              const SizedBox(height: 10),
-              Image(),
+              const SizedBox(height: 5),
+              Image(isEditing),
             ],
           ),
         ),
@@ -78,16 +79,37 @@ class _TransactionDialogState extends State<TransactionDialog> {
     );
   }
 
-  Widget Image() {
-    return Container(
-        child: ElevatedButton(
-      onPressed: () {
-        setState(() {
-          onpressedb = true;
-        });
-      },
-      child: Text(onpressedb.toString()),
-    ));
+  Widget Image(bool isEditing) {
+    return Column(
+      children: [
+        Container(
+            child: ElevatedButton(
+          onPressed: () {
+            setState(() {
+              onpressedbutton = true;
+            });
+            // userimage =
+            //     ImagePicker.platform.getImage(source: ImageSource.gallery) as File;
+          },
+          child: Text(onpressedbutton.toString()),
+        )),
+        onpressedbutton
+            ? Container(
+                height: 120.0,
+                width: 120.0,
+                decoration: const BoxDecoration(
+                  // ignore: unnecessary_null_comparison
+                  image: DecorationImage(
+                    image: NetworkImage(
+                        'https://image.shutterstock.com/image-vector/money-bag-flat-illustration-dollars-260nw-1927192892.jpg'),
+                    fit: BoxFit.fill,
+                  ),
+                  shape: BoxShape.circle,
+                ),
+              )
+            : const SizedBox()
+      ],
+    );
   }
 
   Widget buildName() => TextFormField(

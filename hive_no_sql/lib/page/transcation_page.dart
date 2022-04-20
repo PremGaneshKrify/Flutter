@@ -49,7 +49,7 @@ class _TransactionPageState extends State<TransactionPage> {
       return const Center(
         child: Text(
           'No expenses yet!',
-          style: TextStyle(fontSize: 24),
+          style: TextStyle(fontSize: 22),
         ),
       );
     } else {
@@ -59,7 +59,7 @@ class _TransactionPageState extends State<TransactionPage> {
             ? previousValue - transaction.amount
             : previousValue + transaction.amount,
       );
-      final newExpenseString = '\$${netExpense.toStringAsFixed(2)}';
+      final newExpenseString = '₹ ${netExpense.toStringAsFixed(2)}';
       final color = netExpense > 0 ? Colors.green : Colors.red;
 
       return Column(
@@ -96,7 +96,7 @@ class _TransactionPageState extends State<TransactionPage> {
   ) {
     final color = transaction.isExpense ? Colors.red : Colors.green;
     final date = DateFormat.yMMMd().format(transaction.createdDate);
-    final amount = '\$' + transaction.amount.toStringAsFixed(2);
+    final amount = '₹' + transaction.amount.toStringAsFixed(2);
 
     return Card(
       color: Colors.white,
@@ -143,7 +143,7 @@ class _TransactionPageState extends State<TransactionPage> {
               icon: const Icon(Icons.delete),
               onPressed: () => deleteTransaction(transaction),
             ),
-          )
+          ),
         ],
       );
 
@@ -182,9 +182,9 @@ class _TransactionPageState extends State<TransactionPage> {
 
   void deleteTransaction(Transaction transaction) {
     // final box = Boxes.getTransactions();
-    // box.delete(transaction.key);
+    //  box.delete(transaction.key);
 
     transaction.delete();
-    //setState(() => transactions.remove(transaction));
+    // setState(() => transactions.remove(transaction));
   }
 }
