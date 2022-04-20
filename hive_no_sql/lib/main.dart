@@ -6,8 +6,9 @@ import 'package:hive_no_sql/page/transcation_page.dart';
 Future main() async {
   WidgetsFlutterBinding.ensureInitialized;
   await Hive.initFlutter();
-  Hive.registerAdapter(TranscationAdapter());
-  await Hive.openBox<Transaction>("transcation");
+  Hive.registerAdapter(TransactionAdapter());
+  await Hive.openBox<Transaction>("transactions");
+  
   runApp(const MyApp());
 }
 
@@ -38,7 +39,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   @override
-  Widget build(BuildContext context) => MaterialApp(
+  Widget build(BuildContext context) => const MaterialApp(
         home: TransactionPage(),
       );
 }

@@ -6,7 +6,7 @@ part of 'transcation.dart';
 // TypeAdapterGenerator
 // **************************************************************************
 
-class TranscationAdapter extends TypeAdapter<Transaction> {
+class TransactionAdapter extends TypeAdapter<Transaction> {
   @override
   final int typeId = 0;
 
@@ -43,7 +43,7 @@ class TranscationAdapter extends TypeAdapter<Transaction> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is TranscationAdapter &&
+      other is TransactionAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

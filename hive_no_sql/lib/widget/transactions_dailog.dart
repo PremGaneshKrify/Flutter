@@ -1,7 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:hive_no_sql/model/transcation.dart';
-
-
 
 class TransactionDialog extends StatefulWidget {
   final Transaction? transaction;
@@ -21,8 +21,10 @@ class _TransactionDialogState extends State<TransactionDialog> {
   final formKey = GlobalKey<FormState>();
   final nameController = TextEditingController();
   final amountController = TextEditingController();
-
+  File? userimage;
   bool isExpense = true;
+
+ 
 
   @override
   void initState() {
@@ -58,12 +60,14 @@ class _TransactionDialogState extends State<TransactionDialog> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               buildName(),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               buildAmount(),
-              SizedBox(height: 8),
+              const SizedBox(height: 8),
               buildRadioButtons(),
+              const SizedBox(height: 10),
+              Image(),
             ],
           ),
         ),
@@ -75,9 +79,21 @@ class _TransactionDialogState extends State<TransactionDialog> {
     );
   }
 
+  Widget Image() {
+    return Container(
+        child: ElevatedButton(
+      onPressed: () {
+      //   userimage =
+      //       ImagePicker.platform.getImage(source: ImageSource.gallery) as File;
+      //
+       },
+      child: Text(userimage.toString()),
+    ));
+  }
+
   Widget buildName() => TextFormField(
         controller: nameController,
-        decoration: InputDecoration(
+        decoration: const InputDecoration(
           border: OutlineInputBorder(),
           hintText: 'Enter Name',
         ),
@@ -86,7 +102,7 @@ class _TransactionDialogState extends State<TransactionDialog> {
       );
 
   Widget buildAmount() => TextFormField(
-        decoration: InputDecoration(
+        decoration: const InputDecoration(
           border: OutlineInputBorder(),
           hintText: 'Enter Amount',
         ),
@@ -100,13 +116,13 @@ class _TransactionDialogState extends State<TransactionDialog> {
   Widget buildRadioButtons() => Column(
         children: [
           RadioListTile<bool>(
-            title: Text('Expense'),
+            title: const Text('Expense'),
             value: true,
             groupValue: isExpense,
             onChanged: (value) => setState(() => isExpense = value!),
           ),
           RadioListTile<bool>(
-            title: Text('Income'),
+            title: const Text('Income'),
             value: false,
             groupValue: isExpense,
             onChanged: (value) => setState(() => isExpense = value!),
@@ -115,7 +131,7 @@ class _TransactionDialogState extends State<TransactionDialog> {
       );
 
   Widget buildCancelButton(BuildContext context) => TextButton(
-        child: Text('Cancel'),
+        child: const Text('Cancel'),
         onPressed: () => Navigator.of(context).pop(),
       );
 

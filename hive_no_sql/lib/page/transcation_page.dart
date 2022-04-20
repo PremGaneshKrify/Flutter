@@ -6,6 +6,8 @@ import 'package:hive_no_sql/widget/transactions_dailog.dart';
 import 'package:intl/intl.dart';
 
 class TransactionPage extends StatefulWidget {
+  const TransactionPage({Key? key}) : super(key: key);
+
   @override
   _TransactionPageState createState() => _TransactionPageState();
 }
@@ -14,7 +16,6 @@ class _TransactionPageState extends State<TransactionPage> {
   @override
   void dispose() {
     Hive.close();
-
     super.dispose();
   }
 
@@ -98,7 +99,7 @@ class _TransactionPageState extends State<TransactionPage> {
     final amount = '\$' + transaction.amount.toStringAsFixed(2);
 
     return Card(
-      color: Colors.white,
+      color: Colors.black,
       child: ExpansionTile(
         tilePadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
         title: Text(
@@ -176,14 +177,14 @@ class _TransactionPageState extends State<TransactionPage> {
     // final box = Boxes.getTransactions();
     // box.put(transaction.key, transaction);
 
-   // transaction.save();
+    transaction.save();
   }
 
   void deleteTransaction(Transaction transaction) {
     // final box = Boxes.getTransactions();
     // box.delete(transaction.key);
 
-   //transaction.delete();
+    transaction.delete();
     //setState(() => transactions.remove(transaction));
   }
 }
