@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:hive_no_sql/model/transcation.dart';
-import 'package:image_picker/image_picker.dart';
 
 class TransactionDialog extends StatefulWidget {
   final Transaction? transaction;
@@ -59,14 +58,14 @@ class _TransactionDialogState extends State<TransactionDialog> {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              const SizedBox(height: 8),
+              const SizedBox(height: 6),
               buildName(),
-              const SizedBox(height: 8),
+              const SizedBox(height: 6),
               buildAmount(),
-              const SizedBox(height: 8),
+              const SizedBox(height: 5),
               buildRadioButtons(),
-              const SizedBox(height: 10),
-              Image(),
+              const SizedBox(height: 5),
+              Image(isEditing),
             ],
           ),
         ),
@@ -78,15 +77,38 @@ class _TransactionDialogState extends State<TransactionDialog> {
     );
   }
 
-  Widget Image() {
-    return Container(
-        child: ElevatedButton(
-      onPressed: () {
-        // userimage =
-        //     ImagePicker.platform.getImage(source: ImageSource.gallery) as File;
-      },
-      child: Text(userimage.toString()),
-    ));
+  Widget Image(bool isEditing) {
+    bool onpressedbutton = false;
+    return Column(
+      children: [
+        Container(
+            child: ElevatedButton(
+          onPressed: () {
+            setState(() {
+              onpressedbutton = true;
+            });
+            // userimage =
+            //     ImagePicker.platform.getImage(source: ImageSource.gallery) as File;
+          },
+          child: Text(onpressedbutton.toString()),
+        )),
+        onpressedbutton
+            ? Container(
+                height: 120.0,
+                width: 120.0,
+                decoration: const BoxDecoration(
+                  // ignore: unnecessary_null_comparison
+                  image: DecorationImage(
+                    image: NetworkImage(
+                        'https://image.shutterstock.com/image-vector/money-bag-flat-illustration-dollars-260nw-1927192892.jpg'),
+                    fit: BoxFit.fill,
+                  ),
+                  shape: BoxShape.circle,
+                ),
+              )
+            : const SizedBox()
+      ],
+    );
   }
 
   Widget buildName() => TextFormField(
