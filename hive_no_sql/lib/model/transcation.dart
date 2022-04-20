@@ -11,4 +11,6 @@ class Transaction {
   late bool isExpense = true;
   @HiveField(3)
   late double amount;
+
+  
 }
