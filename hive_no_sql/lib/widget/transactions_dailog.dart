@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:hive_no_sql/model/transcation.dart';
-import 'package:image_picker/image_picker.dart';
 
 class TransactionDialog extends StatefulWidget {
   final Transaction? transaction;
@@ -24,6 +23,7 @@ class _TransactionDialogState extends State<TransactionDialog> {
   final amountController = TextEditingController();
   File? userimage;
   bool isExpense = true;
+  bool onpressedb = false;
 
   @override
   void initState() {
@@ -82,10 +82,11 @@ class _TransactionDialogState extends State<TransactionDialog> {
     return Container(
         child: ElevatedButton(
       onPressed: () {
-        // userimage =
-        //     ImagePicker.platform.getImage(source: ImageSource.gallery) as File;
+        setState(() {
+          onpressedb = true;
+        });
       },
-      child: Text(userimage.toString()),
+      child: Text(onpressedb.toString()),
     ));
   }
 

@@ -11,7 +11,6 @@ Future main() async {
   var box1 = await Hive.openBox<Transaction>("transactions");
   var box2 = await Hive.openBox<Testing>("testing");
   runApp(const MyApp());
-  //hi
 }
 
 class MyApp extends StatelessWidget {
