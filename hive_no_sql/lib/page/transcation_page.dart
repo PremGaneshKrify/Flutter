@@ -176,14 +176,14 @@ class _TransactionPageState extends State<TransactionPage> {
     // final box = Boxes.getTransactions();
     // box.put(transaction.key, transaction);
 
-   // transaction.save();
+    transaction.save();
   }
 
   void deleteTransaction(Transaction transaction) {
     // final box = Boxes.getTransactions();
     // box.delete(transaction.key);
 
-   //transaction.delete();
+    transaction.delete();
     //setState(() => transactions.remove(transaction));
   }
 }

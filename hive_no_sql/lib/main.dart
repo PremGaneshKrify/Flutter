@@ -7,7 +7,8 @@ Future main() async {
   WidgetsFlutterBinding.ensureInitialized;
   await Hive.initFlutter();
   Hive.registerAdapter(TranscationAdapter());
-  await Hive.openBox<Transaction>("transcation");
+  await Hive.openBox<Transaction>("transactions");
+  
   runApp(const MyApp());
 }
 
