@@ -23,7 +23,7 @@ class _TransactionDialogState extends State<TransactionDialog> {
   final amountController = TextEditingController();
   File? userimage;
   bool isExpense = true;
-
+  bool onpressedbutton = false;
   @override
   void initState() {
     super.initState();
@@ -78,7 +78,6 @@ class _TransactionDialogState extends State<TransactionDialog> {
   }
 
   Widget Image(bool isEditing) {
-    bool onpressedbutton = false;
     return Column(
       children: [
         Container(
