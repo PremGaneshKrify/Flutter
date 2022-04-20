@@ -26,13 +26,12 @@ class CategoryModel extends HiveObject {
   int dominantImageColor;
 
   CategoryModel(
-    this.name, {
-    required this.imageUrl,
-    required this.id,
-    required this.file,
-    required this.recipes,
-  required this.dominantImageColor,
-  });
+    this.name, 
+    this.imageUrl, 
+    this.id, 
+    this.file, 
+    this.recipes,
+    this.dominantImageColor);
 
   @override
   bool operator ==(other) {

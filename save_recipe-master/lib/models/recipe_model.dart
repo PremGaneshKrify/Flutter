@@ -8,7 +8,7 @@ part 'recipe_model.g.dart';
 
 @HiveType(typeId: 1)
 class RecipeModel extends HiveObject {
-  RecipeModel(this.name, this.image, {this.id, this.isFavorite = false});
+  RecipeModel(this.name, this.image, {required this.id, this.isFavorite = false});
   @HiveField(0)
   String id;
 

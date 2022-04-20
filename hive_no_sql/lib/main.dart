@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:hive_no_sql/model/testing.dart';
 import 'package:hive_no_sql/model/transcation.dart';
 import 'package:hive_no_sql/page/transcation_page.dart';
 
@@ -7,8 +8,8 @@ Future main() async {
   WidgetsFlutterBinding.ensureInitialized;
   await Hive.initFlutter();
   Hive.registerAdapter(TransactionAdapter());
-  await Hive.openBox<Transaction>("transactions");
-  
+  var box1 = await Hive.openBox<Transaction>("transactions");
+  var box2 = await Hive.openBox<Testing>("testing");
   runApp(const MyApp());
 }
 

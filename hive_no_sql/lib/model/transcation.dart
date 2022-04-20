@@ -1,6 +1,7 @@
 import 'package:hive/hive.dart';
 part "transcation.g.dart";
 
+
 @HiveType(typeId: 0)
 class Transaction extends HiveObject {
   @HiveField(0)
@@ -12,3 +13,5 @@ class Transaction extends HiveObject {
   @HiveField(3)
   late double amount;
 }
+
+

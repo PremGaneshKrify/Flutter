@@ -99,7 +99,7 @@ class _TransactionPageState extends State<TransactionPage> {
     final amount = '\$' + transaction.amount.toStringAsFixed(2);
 
     return Card(
-      color: Colors.black,
+      color: Colors.white,
       child: ExpansionTile(
         tilePadding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
         title: Text(

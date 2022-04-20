@@ -22,10 +22,10 @@ class HiveDb {
   void initTestData() async {
     final List<CategoryModel> _categories = [
       CategoryModel(
-        "Noodles",
+       name:  "Noodles",
         imageUrl: kImageUrlRecipeOfDay, 
       ),
-      CategoryModel('Rice', imageUrl: kImageUrlRecipeOfDay ),
+      CategoryModel('Rice', imageUrl: kImageUrlRecipeOfDay, dominantImageColor: null ),
       CategoryModel('Chicken', imageUrl: kImageUrlRecipeOfDay ),
       CategoryModel('Beef', imageUrl: kImageUrlRecipeOfDay ),
       CategoryModel('Veggie', imageUrl: kImageUrlRecipeOfDay)
