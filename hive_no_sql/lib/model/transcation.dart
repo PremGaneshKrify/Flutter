@@ -1,6 +1,7 @@
+import 'dart:typed_data';
+
 import 'package:hive/hive.dart';
 part "transcation.g.dart";
-
 
 @HiveType(typeId: 0)
 class Transaction extends HiveObject {
@@ -12,6 +13,6 @@ class Transaction extends HiveObject {
   late bool isExpense = true;
   @HiveField(3)
   late double amount;
+  @HiveField(4)
+  Uint8List? billImage;
 }
-
-

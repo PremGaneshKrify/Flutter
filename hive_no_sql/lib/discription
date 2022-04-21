@@ -14,3 +14,12 @@ https://youtu.be/w8cZKm9s228
 document -
 
 https://docs.hivedb.dev/#/basics/boxes
+
+
+
+TO DELETED AND UPDATE THE GENERATED FILE USE  THIS COMMAND
+
+
+flutter packages pub run build_runner build --delete-conflicting-outputs 
+
+

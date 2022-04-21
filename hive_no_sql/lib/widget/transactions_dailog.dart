@@ -1,11 +1,14 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:hive_no_sql/model/transcation.dart';
+import 'package:image_picker/image_picker.dart';
 
 class TransactionDialog extends StatefulWidget {
   final Transaction? transaction;
-  final Function(String name, double amount, bool isExpense) onClickedDone;
+  final Function(String name, double amount, bool isExpense, Uint8List somename)
+      onClickedDone;
 
   const TransactionDialog({
     Key? key,
@@ -21,10 +24,11 @@ class _TransactionDialogState extends State<TransactionDialog> {
   final formKey = GlobalKey<FormState>();
   final nameController = TextEditingController();
   final amountController = TextEditingController();
-  File? userimage;
+  Uint8List? memoryImage;
   bool isExpense = true;
 
   bool onpressedbutton = false;
+  File? imageFilePath;
 
   @override
   void initState() {
@@ -47,6 +51,50 @@ class _TransactionDialogState extends State<TransactionDialog> {
     super.dispose();
   }
 
+  Image() {
+    return Column(
+      children: [
+        Container(
+            child: ElevatedButton(
+          onPressed: () async {
+            final img =
+                await ImagePicker().getImage(source: ImageSource.gallery);
+            Uint8List a = await img!.readAsBytes();
+
+            setState(() {
+              // memoryImage = bytes;
+              imageFilePath = File(img.path);
+
+              memoryImage = a;
+            });
+          },
+          child: const Text("ADD IMAGE"),
+        )),
+        memoryImage != null
+            ? Container(
+                child: Column(
+                  children: [
+                    CircleAvatar(
+                      backgroundImage: MemoryImage(memoryImage!),
+                      radius: 90,
+                    ),
+                    // Container(
+                    //   width: 150,
+                    //   height: 150,
+                    //   decoration: BoxDecoration(
+                    //     image: DecorationImage(
+                    //         fit: BoxFit.cover,
+                    //         image: MemoryImage(memoryImage!, scale: 0.5)),
+                    //   ),
+                    // ),
+                  ],
+                ),
+              )
+            : const Text('NO IMAGES')
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final isEditing = widget.transaction != null;
@@ -59,7 +107,7 @@ class _TransactionDialogState extends State<TransactionDialog> {
         child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
+            children: [
               const SizedBox(height: 6),
               buildName(),
               const SizedBox(height: 6),
@@ -67,7 +115,7 @@ class _TransactionDialogState extends State<TransactionDialog> {
               const SizedBox(height: 5),
               buildRadioButtons(),
               const SizedBox(height: 5),
-              Image(isEditing),
+              Image()
             ],
           ),
         ),
@@ -75,39 +123,6 @@ class _TransactionDialogState extends State<TransactionDialog> {
       actions: <Widget>[
         buildCancelButton(context),
         buildAddButton(context, isEditing: isEditing),
-      ],
-    );
-  }
-
-  Widget Image(bool isEditing) {
-    return Column(
-      children: [
-        Container(
-            child: ElevatedButton(
-          onPressed: () {
-            setState(() {
-              onpressedbutton = true;
-            });
-            // userimage =
-            //     ImagePicker.platform.getImage(source: ImageSource.gallery) as File;
-          },
-          child: Text(onpressedbutton.toString()),
-        )),
-        onpressedbutton
-            ? Container(
-                height: 120.0,
-                width: 120.0,
-                decoration: const BoxDecoration(
-                  // ignore: unnecessary_null_comparison
-                  image: DecorationImage(
-                    image: NetworkImage(
-                        'https://image.shutterstock.com/image-vector/money-bag-flat-illustration-dollars-260nw-1927192892.jpg'),
-                    fit: BoxFit.fill,
-                  ),
-                  shape: BoxShape.circle,
-                ),
-              )
-            : const SizedBox()
       ],
     );
   }
@@ -167,8 +182,13 @@ class _TransactionDialogState extends State<TransactionDialog> {
         if (isValid) {
           final name = nameController.text;
           final amount = double.tryParse(amountController.text) ?? 0;
-
-          widget.onClickedDone(name, amount, isExpense);
+          final billImage = memoryImage;
+          widget.onClickedDone(
+            name,
+            amount,
+            isExpense,
+            billImage!,
+          );
 
           Navigator.of(context).pop();
         }

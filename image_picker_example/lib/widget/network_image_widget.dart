@@ -44,6 +44,7 @@ class NetworkImageWidget extends StatelessWidget {
           backgroundImage: NetworkImage(urlImage2),
           radius: 120,
         ),
+     Container(decoration: BoxDecoration(image:  DecorationImage(image: NetworkImage(urlImage2))),)
       ],
     );
   }

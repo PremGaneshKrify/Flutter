@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hive_no_sql/boxes.dart';
@@ -130,8 +132,9 @@ class _TransactionPageState extends State<TransactionPage> {
                 MaterialPageRoute(
                   builder: (context) => TransactionDialog(
                     transaction: transaction,
-                    onClickedDone: (name, amount, isExpense) =>
-                        editTransaction(transaction, name, amount, isExpense),
+                    onClickedDone: (name, amount, isExpense, billImage) =>
+                        editTransaction(
+                            transaction, name, amount, isExpense, billImage),
                   ),
                 ),
               ),
@@ -147,13 +150,14 @@ class _TransactionPageState extends State<TransactionPage> {
         ],
       );
 
-  Future addTransaction(String name, double amount, bool isExpense) async {
+  Future addTransaction(
+      String name, double amount, bool isExpense, Uint8List somename) async {
     final transaction = Transaction()
       ..name = name
       ..createdDate = DateTime.now()
       ..amount = amount
-      ..isExpense = isExpense;
-
+      ..isExpense = isExpense
+      ..billImage = somename;
     final box = Boxes.getTransactions();
     box.add(transaction);
     //box.put('mykey', transaction);
@@ -169,10 +173,12 @@ class _TransactionPageState extends State<TransactionPage> {
     String name,
     double amount,
     bool isExpense,
+    Uint8List billImage,
   ) {
     transaction.name = name;
     transaction.amount = amount;
     transaction.isExpense = isExpense;
+    transaction.billImage = billImage;
 
     // final box = Boxes.getTransactions();
     // box.put(transaction.key, transaction);
