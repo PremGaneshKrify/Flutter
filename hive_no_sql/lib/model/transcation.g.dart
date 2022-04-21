@@ -9,13 +9,16 @@ part of 'transcation.dart';
 class TransactionAdapter extends TypeAdapter<Transaction> {
   @override
   final int typeId = 0;
-
+ var c = 0;
   @override
   Transaction read(BinaryReader reader) {
+   
     final numOfFields = reader.readByte();
+    c++;
     final fields = <int, dynamic>{
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
+    print(c);
     return Transaction()
       ..name = fields[0] as String
       ..createdDate = fields[1] as DateTime

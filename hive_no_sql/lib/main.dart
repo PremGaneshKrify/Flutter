@@ -9,7 +9,7 @@ Future main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(TransactionAdapter());
   var box1 = await Hive.openBox<Transaction>("transactions");
-  var box2 = await Hive.openBox<Testing>("testing");
+ // var box2 = await Hive.openBox<Testing>("testing");
   runApp(const MyApp());
 
 }
@@ -39,7 +39,7 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  @override
+
   @override
   Widget build(BuildContext context) => const MaterialApp(
         home: TransactionPage(),

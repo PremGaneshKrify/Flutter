@@ -40,6 +40,7 @@ class _TransactionDialogState extends State<TransactionDialog> {
       nameController.text = transaction.name;
       amountController.text = transaction.amount.toString();
       isExpense = transaction.isExpense;
+      memoryImage = transaction.billImage;
     }
   }
 
@@ -47,7 +48,7 @@ class _TransactionDialogState extends State<TransactionDialog> {
   void dispose() {
     nameController.dispose();
     amountController.dispose();
-
+    // memoryImage!.dispose();
     super.dispose();
   }
 
@@ -64,9 +65,9 @@ class _TransactionDialogState extends State<TransactionDialog> {
             setState(() {
               // memoryImage = bytes;
               imageFilePath = File(img.path);
-
               memoryImage = a;
             });
+            print(memoryImage.toString());
           },
           child: const Text("ADD IMAGE"),
         )),
