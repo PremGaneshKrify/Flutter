@@ -59,9 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     final currentWidth = MediaQuery.of(context).size.width;
-    final currentheight = MediaQuery.of(context)
-        .size
-        .height; // This method is rerun every time setState is called, for instance as done
+    final currentheight = MediaQuery.of(context).size.height; // This method is rerun every time setState is called, for instance as done
 
     return Container();
   }

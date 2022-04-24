@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class DatabaseMethods {
@@ -17,14 +16,24 @@ class DatabaseMethods {
         .get();
   }
 
-  uploadUserInfo(userMap) {
+  uploadUserInfo(userMap, userUID) {
     return FirebaseFirestore.instance
         .collection('users')
-        .add(userMap)
+        .doc("$userUID")
+        .set(userMap)
         .catchError((e) {
       log(e.toString());
     });
   }
+
+  // uploadUserInfo(userMap, userUID) {
+  //   return FirebaseFirestore.instance
+  //       .collection('users')
+  //       .add(userUID)
+  //       .catchError((e) {
+  //     log(e.toString());
+  //   });
+  // }
 
   createChatRoom(String chatRoomId, chatRoomMap) {
     FirebaseFirestore.instance

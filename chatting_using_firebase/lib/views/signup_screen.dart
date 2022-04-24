@@ -3,7 +3,9 @@ import 'package:chatting_using_firebase/helper/helperfunctions.dart';
 import 'package:chatting_using_firebase/services/auth.dart';
 import 'package:chatting_using_firebase/services/database.dart';
 import 'package:chatting_using_firebase/views/chatrooms_screen.dart';
+
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 
 class SignUpscreen extends StatefulWidget {
   final Function toggleView;
@@ -22,38 +24,66 @@ class _SignUpscreenState extends State<SignUpscreen> {
   TextEditingController userNameTextEditingcontroller = TextEditingController();
   TextEditingController emailTextEditingcontroller = TextEditingController();
   TextEditingController passwordTextEditingcontroller = TextEditingController();
+  var userUID;
+  bool signupbutton = true;
+  String? token;
+
+  @override
+  void dispose() {
+    //  userNameTextEditingcontroller.dispose();
+    passwordTextEditingcontroller.dispose();
+    emailTextEditingcontroller.dispose();
+    super.dispose();
+  }
 
   signMeUp() async {
     if (formKey.currentState!.validate()) {
-      log("signMeUp entered");
-      setState(() {
-        isLoading = true;
-        HelperFunctions.saveUserLoggedInSharedPreference(true);
-        HelperFunctions.saveUserEmailSharedPreference(
-            emailTextEditingcontroller.text);
-        HelperFunctions.saveUserNameSharedPreference(
-            userNameTextEditingcontroller.text);
-      });
+      isLoading = true;
       authServices
           .signUpWithEmailAndPassoword(emailTextEditingcontroller.text,
               passwordTextEditingcontroller.text)
           .then((value) async {
-        log("Response from firebase signup:");
-        log(value.toString());
-
-        Map<String, String> userInfoMap = {
-          "name": userNameTextEditingcontroller.text,
-          "email": emailTextEditingcontroller.text
-        };
-
-        await databaseMethods.uploadUserInfo(userInfoMap);
-
-        Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-                builder: (context) => const ChatRoom(
-                   
-                    )));
+        if (value != null) {
+          showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+              title: const Center(child: Text("Alert")),
+              content: Text(value.toString()),
+              actions: <Widget>[
+                FlatButton(
+                  onPressed: () {
+                    Navigator.of(ctx).pop();
+                    setState(() {
+                      isLoading = false;
+                    });
+                  },
+                  child: const Text("close"),
+                ),
+              ],
+            ),
+          );
+          var v = value;
+          userUID = v.uid;
+          Map<String, String> userInfoMap = {
+            "name": userNameTextEditingcontroller.text,
+            "email": emailTextEditingcontroller.text
+          };
+          await databaseMethods.uploadUserInfo(userInfoMap, userUID);
+          setState(() {
+            isLoading = true;
+            HelperFunctions.saveUserLoggedInSharedPreference(true);
+            HelperFunctions.saveUserEmailSharedPreference(
+                emailTextEditingcontroller.text);
+            HelperFunctions.saveUserNameSharedPreference(
+                userNameTextEditingcontroller.text);
+            HelperFunctions.saveUserUIDSharedPreference(userUID);
+          });
+          Navigator.pushReplacement(context,
+              MaterialPageRoute(builder: (context) => const ChatRoom()));
+        }
+      });
+      setState(() {
+        signupbutton = true;
       });
     }
     log("not enterd if case");
@@ -64,17 +94,24 @@ class _SignUpscreenState extends State<SignUpscreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Chatting using Firebase"),
-      ),
+          title: const Text(
+            "Chatting using Firebase",
+          ),
+          backgroundColor: Colors.black),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: Padding(
           padding: const EdgeInsets.all(10),
           child: Stack(
             children: [
+              SizedBox(
+                height: 300,
+                width: MediaQuery.of(context).size.width,
+                child: Lottie.asset("assets/images/signuplottie.json"),
+              ),
               SingleChildScrollView(
                 child: SizedBox(
-                  height: MediaQuery.of(context).size.height - 50,
+                  height: MediaQuery.of(context).size.height - 10,
                   child: Form(
                     key: formKey,
                     child: Column(
@@ -88,8 +125,8 @@ class _SignUpscreenState extends State<SignUpscreen> {
                           },
                           controller: userNameTextEditingcontroller,
                           decoration: const InputDecoration(
-                              hintText: "User Name",
-                              hintStyle: TextStyle(color: Colors.blue)),
+                              hintText: "Pick a unique name",
+                              hintStyle: TextStyle(color: Colors.black)),
                         ),
                         TextFormField(
                           validator: (value) {
@@ -115,7 +152,7 @@ class _SignUpscreenState extends State<SignUpscreen> {
                           },
                           decoration: const InputDecoration(
                               hintText: "Email",
-                              hintStyle: TextStyle(color: Colors.blue)),
+                              hintStyle: TextStyle(color: Colors.black)),
                         ),
                         TextFormField(
                           onChanged: (val) {
@@ -137,7 +174,7 @@ class _SignUpscreenState extends State<SignUpscreen> {
                           controller: passwordTextEditingcontroller,
                           decoration: const InputDecoration(
                               hintText: "password",
-                              hintStyle: TextStyle(color: Colors.blue)),
+                              hintStyle: TextStyle(color: Colors.black)),
                         ),
                         const SizedBox(
                           height: 30,
@@ -148,21 +185,30 @@ class _SignUpscreenState extends State<SignUpscreen> {
                             onPressed: () {
                               log("hello");
                             },
-                            child: const Text("Forgot password"),
+                            child: const Text(
+                              "Forgot password",
+                              style: TextStyle(color: Colors.black),
+                            ),
                           ),
                         ),
                         GestureDetector(
                           onTap: () {
-                            log(" signUP Button Pressed ");
-                            signMeUp();
+                            signupbutton ? signMeUp() : null;
+                            setState(() {
+                              signupbutton = false;
+                            });
                           },
                           child: Container(
                             decoration: BoxDecoration(
-                                color: Colors.blue,
+                                color: Colors.black,
                                 borderRadius: BorderRadius.circular(250)),
                             height: MediaQuery.of(context).size.height * 0.08,
                             width: MediaQuery.of(context).size.width * 0.8,
-                            child: const Center(child: Text("Sign up")),
+                            child: const Center(
+                                child: Text(
+                              "Sign up",
+                              style: TextStyle(color: Colors.white),
+                            )),
                           ),
                         ),
                         const SizedBox(

@@ -48,7 +48,7 @@ class _TransactionDialogState extends State<TransactionDialog> {
   void dispose() {
     nameController.dispose();
     amountController.dispose();
-    // memoryImage!.dispose();
+   
     super.dispose();
   }
 

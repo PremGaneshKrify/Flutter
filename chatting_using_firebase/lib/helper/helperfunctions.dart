@@ -6,6 +6,7 @@ class HelperFunctions {
   static String sharedPreferenceUserLoggedInKey = "ISLOGGEDIN";
   static String sharedPreferenceUserNameKey = "USERNAMEKEY";
   static String sharedPreferenceUserEmailKey = "USEREMAILKEY";
+  static String sharedPreferenceUserUIDkey = "USERUIDKEY";
 
   /// saving data to sharedpreference
   static Future<bool> saveUserLoggedInSharedPreference(
@@ -17,15 +18,19 @@ class HelperFunctions {
   }
 
   static Future<bool> saveUserNameSharedPreference(String userName) async {
-    //sign up entered here
-    //sign in entered here
-    log("User Name stored into shared preference");
+    log("User Name stored into shared preference $userName");
     SharedPreferences preferences = await SharedPreferences.getInstance();
     return await preferences.setString(sharedPreferenceUserNameKey, userName);
   }
 
+  static Future<bool> saveUserUIDSharedPreference(String userUId) async {
+    log("User UID stored into shared preference $userUId");
+    SharedPreferences preferences = await SharedPreferences.getInstance();
+    return await preferences.setString(sharedPreferenceUserUIDkey, userUId);
+  }
+
   static Future<bool> saveUserEmailSharedPreference(String userEmail) async {
-    log("Email stored into shared preference");
+    log("Email stored into shared preference $userEmail");
     SharedPreferences preferences = await SharedPreferences.getInstance();
     return await preferences.setString(sharedPreferenceUserEmailKey, userEmail);
   }
@@ -38,9 +43,8 @@ class HelperFunctions {
   }
 
   static Future<String?> getUserNameSharedPreference() async {
-    //  chatroom get entred here
-
     SharedPreferences preferences = await SharedPreferences.getInstance();
+
     return preferences.getString(sharedPreferenceUserNameKey);
   }
 

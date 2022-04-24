@@ -6,9 +6,8 @@ import 'package:chatting_using_firebase/services/auth.dart';
 import 'package:chatting_using_firebase/services/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:lottie/lottie.dart';
 import '../helper/helperfunctions.dart';
-import 'chatrooms_screen.dart';
 
 class SignInScreen extends StatefulWidget {
   final Function toggleView;
@@ -27,46 +26,69 @@ class _SignInScreenState extends State<SignInScreen> {
   TextEditingController passwordTextEditingcontroller = TextEditingController();
   bool isLoading = false;
   String? usernamefromsignin;
+
   signIn() {
     if (formKey.currentState!.validate()) {
-    
+      isLoading = true;
       log("_____________________________________________----");
       log(" if logic ${formKey.currentState!.validate()}");
       log("user entered data");
       log(emailTextEditingcontroller.text);
       log(passwordTextEditingcontroller.text);
 
-      setState(() {
-        isLoading = true;
-        HelperFunctions.saveUserEmailSharedPreference(
-            emailTextEditingcontroller.text);
-        HelperFunctions.saveUserLoggedInSharedPreference(true);
-      });
-
       authServices
           .signinWithEmailAndPassword(emailTextEditingcontroller.text,
               passwordTextEditingcontroller.text)
-          // ignore: duplicate_ignore
           .then((value) {
-        // ignore: avoid_print
-        print("FIREBASE RESPONSE...............");
-        print(value);
+        if (value != null) {
+          print("FIREBASE RESPONSE...............");
+          print(value.toString());
+          if (value.toString() == "Instance of 'Usermodel'") {
+          } else {
+            showDialog(
+              context: context,
+              builder: (ctx) => AlertDialog(
+                title: const Center(child: Text("Alert")),
+                content: Text(value.toString()),
+                actions: <Widget>[
+                  FlatButton(
+                    onPressed: () {
+                      Navigator.of(ctx).pop();
+                      setState(() {
+                        isLoading = false;
+                      });
+                    },
+                    child: const Text("close"),
+                  ),
+                ],
+              ),
+            );
+          }
+        }
 
         if (value != null) {
           databaseMethods
               .getUserByUserEmail(emailTextEditingcontroller.text)
               .then((value) async {
             snapshotUserInfo = value;
-            log("USER INFO AFTER SIGN IN.................");
-            log(snapshotUserInfo.toString());
-            log(snapshotUserInfo!.docs.toString());
-            log(snapshotUserInfo!.docs[0]["name"]);
+            // log("USER INFO AFTER SIGN IN.................");
+            // log(snapshotUserInfo.toString());
+            // log(snapshotUserInfo!.docs.toString());
+
+            // log(snapshotUserInfo!.docs[0]["name"]);
             HelperFunctions.saveUserNameSharedPreference(
                 snapshotUserInfo?.docs[0]["name"]);
             print(usernamefromsignin);
+            setState(() {
+              isLoading = true;
+              HelperFunctions.saveUserEmailSharedPreference(
+                  emailTextEditingcontroller.text);
+              HelperFunctions.saveUserLoggedInSharedPreference(true);
+            });
+
+            // Navigator.pushReplacement(context,
+            //     MaterialPageRoute(builder: (context) => const ChatRoom()));
           });
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => const ChatRoom()));
         }
       });
     }
@@ -76,11 +98,16 @@ class _SignInScreenState extends State<SignInScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Chatting using Firebase"),
+        title: const Text(
+          "Chatting using Firebase",
+        ),
+        centerTitle: true,
+        backgroundColor: Colors.black,
       ),
       body: Builder(builder: (context) {
         return Stack(
           children: [
+            isLoading == true? const Center(child: CircularProgressIndicator())  : const SizedBox(),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Padding(
@@ -93,6 +120,10 @@ class _SignInScreenState extends State<SignInScreen> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
+                          Container(
+                            child:
+                                Lottie.asset("assets/images/loginlottie.json"),
+                          ),
                           TextFormField(
                             controller: emailTextEditingcontroller,
                             validator: (value) {
@@ -115,7 +146,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             },
                             decoration: const InputDecoration(
                                 hintText: "Email",
-                                hintStyle: TextStyle(color: Colors.blue)),
+                                hintStyle: TextStyle(color: Colors.black)),
                           ),
                           TextFormField(
                             onChanged: (val) {
@@ -137,7 +168,7 @@ class _SignInScreenState extends State<SignInScreen> {
                             },
                             decoration: const InputDecoration(
                                 hintText: "password",
-                                hintStyle: TextStyle(color: Colors.blue)),
+                                hintStyle: TextStyle(color: Colors.black)),
                           ),
                           const SizedBox(
                             height: 30,
@@ -146,7 +177,10 @@ class _SignInScreenState extends State<SignInScreen> {
                             alignment: Alignment.topRight,
                             child: TextButton(
                               onPressed: () {},
-                              child: const Text("Forgot password"),
+                              child: const Text(
+                                "Forgot password",
+                                style: TextStyle(color: Colors.black),
+                              ),
                             ),
                           ),
                           InkWell(
@@ -155,11 +189,15 @@ class _SignInScreenState extends State<SignInScreen> {
                             }),
                             child: Container(
                               decoration: BoxDecoration(
-                                  color: Colors.blue,
+                                  color: Colors.black,
                                   borderRadius: BorderRadius.circular(250)),
                               height: MediaQuery.of(context).size.height * 0.08,
                               width: MediaQuery.of(context).size.width * 0.8,
-                              child: const Center(child: Text("Sign In")),
+                              child: const Center(
+                                  child: Text(
+                                "Sign In",
+                                style: TextStyle(color: Colors.white),
+                              )),
                             ),
                           ),
                           const SizedBox(
@@ -176,21 +214,28 @@ class _SignInScreenState extends State<SignInScreen> {
                           ),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                const Text("Don't have a account"),
-                                InkWell(
-                                  onTap: () {
-                                    widget.toggleView();
-                                  },
-                                  child: const Text(
-                                    "Register here",
-                                    style: TextStyle(
-                                        decoration: TextDecoration.underline),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  const Text(
+                                    "Don't have a account",
+                                    style: TextStyle(fontSize: 16),
                                   ),
-                                )
-                              ],
+                                  InkWell(
+                                    onTap: () {
+                                      widget.toggleView();
+                                    },
+                                    child: const Text(
+                                      "  Register here",
+                                      style: TextStyle(
+                                          decoration: TextDecoration.underline,
+                                          fontSize: 16),
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
                           )
                         ],
@@ -200,9 +245,6 @@ class _SignInScreenState extends State<SignInScreen> {
                 ),
               ),
             ),
-            isLoading == true
-                ? const Center(child: CircularProgressIndicator())
-                : const SizedBox()
           ],
         );
       }),
