@@ -4,14 +4,13 @@ import 'dart:developer';
 
 import 'package:chatting_using_firebase/services/auth.dart';
 import 'package:chatting_using_firebase/services/database.dart';
+import 'package:chatting_using_firebase/views/chatrooms_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import '../helper/helperfunctions.dart';
-
 class SignInScreen extends StatefulWidget {
   final Function toggleView;
-
   const SignInScreen(this.toggleView, {Key? key}) : super(key: key);
   @override
   State<SignInScreen> createState() => _SignInScreenState();
@@ -71,11 +70,6 @@ class _SignInScreenState extends State<SignInScreen> {
               .getUserByUserEmail(emailTextEditingcontroller.text)
               .then((value) async {
             snapshotUserInfo = value;
-            // log("USER INFO AFTER SIGN IN.................");
-            // log(snapshotUserInfo.toString());
-            // log(snapshotUserInfo!.docs.toString());
-
-            // log(snapshotUserInfo!.docs[0]["name"]);
             HelperFunctions.saveUserNameSharedPreference(
                 snapshotUserInfo?.docs[0]["name"]);
             print(usernamefromsignin);
@@ -86,8 +80,8 @@ class _SignInScreenState extends State<SignInScreen> {
               HelperFunctions.saveUserLoggedInSharedPreference(true);
             });
 
-            // Navigator.pushReplacement(context,
-            //     MaterialPageRoute(builder: (context) => const ChatRoom()));
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => const ChatRoom()));
           });
         }
       });
@@ -107,7 +101,9 @@ class _SignInScreenState extends State<SignInScreen> {
       body: Builder(builder: (context) {
         return Stack(
           children: [
-            isLoading == true? const Center(child: CircularProgressIndicator())  : const SizedBox(),
+            isLoading == true
+                ? Center(child: Lottie.asset("assets/images/loading.json"))
+                : const SizedBox(),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Padding(

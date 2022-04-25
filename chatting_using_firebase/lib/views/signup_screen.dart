@@ -44,24 +44,27 @@ class _SignUpscreenState extends State<SignUpscreen> {
               passwordTextEditingcontroller.text)
           .then((value) async {
         if (value != null) {
-          showDialog(
-            context: context,
-            builder: (ctx) => AlertDialog(
-              title: const Center(child: Text("Alert")),
-              content: Text(value.toString()),
-              actions: <Widget>[
-                FlatButton(
-                  onPressed: () {
-                    Navigator.of(ctx).pop();
-                    setState(() {
-                      isLoading = false;
-                    });
-                  },
-                  child: const Text("close"),
-                ),
-              ],
-            ),
-          );
+          if (value.toString() == "Instance of 'Usermodel'") {
+          } else {
+            showDialog(
+              context: context,
+              builder: (ctx) => AlertDialog(
+                title: const Center(child: Text("Alert")),
+                content: Text(value.toString()),
+                actions: <Widget>[
+                  FlatButton(
+                    onPressed: () {
+                      Navigator.of(ctx).pop();
+                      setState(() {
+                        isLoading = false;
+                      });
+                    },
+                    child: const Text("close"),
+                  ),
+                ],
+              ),
+            );
+          }
           var v = value;
           userUID = v.uid;
           Map<String, String> userInfoMap = {
@@ -251,7 +254,7 @@ class _SignUpscreenState extends State<SignUpscreen> {
                 ),
               ),
               isLoading == true
-                  ? const Center(child: CircularProgressIndicator())
+                  ? Center(child: Lottie.asset("assets/images/loading.json"))
                   : const SizedBox()
             ],
           ),

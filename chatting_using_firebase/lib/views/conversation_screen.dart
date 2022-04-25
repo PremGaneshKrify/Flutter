@@ -14,13 +14,13 @@ import 'package:lottie/lottie.dart';
 class ConversationScreen extends StatefulWidget {
   final String chatRoomId;
   final String searchResultName;
-  final String rectoken;
+  final String searchUserToken;
 
   const ConversationScreen(
       {Key? key,
       required this.chatRoomId,
       required this.searchResultName,
-      required this.rectoken})
+      required this.searchUserToken})
       : super(key: key);
 
   @override
@@ -170,7 +170,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                 },
                 'priority': 'high',
                 'data': data,
-                'to': widget.rectoken,
+                'to': widget.searchUserToken,
               }));
 
       if (response.statusCode == 200) {
@@ -240,18 +240,21 @@ class _ConversationScreenState extends State<ConversationScreen> {
                   child: Row(
                     children: [
                       Expanded(
-                        child: TextField(
-                          controller: messageTextEditingController,
-                          decoration: const InputDecoration(
-                              hintText: "Type your message here ....",
-                              hintStyle: TextStyle(color: Colors.black),
-                              border: InputBorder.none),
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: TextField(
+                            controller: messageTextEditingController,
+                            decoration: const InputDecoration(
+                                hintText: "Type your message here ....",
+                                hintStyle: TextStyle(color: Colors.black),
+                                border: InputBorder.none),
+                          ),
                         ),
                       ),
                       InkWell(
                         onTap: () {
                           sendNotification(messageTextEditingController.text,
-                              widget.rectoken);
+                              widget.searchUserToken);
                           sendMessage();
                           messageTextEditingController.clear();
                         },

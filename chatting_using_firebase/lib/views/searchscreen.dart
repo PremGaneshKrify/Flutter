@@ -40,8 +40,8 @@ class _SearchscreenState extends State<Searchscreen> {
         itemCount: searchsnapshot.docs.length,
         itemBuilder: (BuildContext context, int index) {
           return SearchTile(
-            email: searchsnapshot.docs[0]["name"],
-            searchUserName: searchsnapshot.docs[0]["email"],
+            email: searchsnapshot.docs[0]["email"],
+            searchUserName: searchsnapshot.docs[0]["name"],
           );
         });
   }
@@ -62,7 +62,7 @@ class _SearchscreenState extends State<Searchscreen> {
         builder: (context) => ConversationScreen(
           chatRoomId: chatRoomId.toString(),
           searchResultName: searchUserName,
-          rectoken: searchUsertoken!,
+          searchUserToken: searchUsertoken!,
         ),
       ),
     );
@@ -87,8 +87,8 @@ class _SearchscreenState extends State<Searchscreen> {
   Widget SearchTile({required String email, required String searchUserName}) {
     return Container(
         color: Colors.grey[100],
-        height: 100,
-        width: 100,
+        // height: 100,
+        // width: 100,
         child: Padding(
           padding: const EdgeInsets.all(20),
           child: Row(
@@ -110,12 +110,18 @@ class _SearchscreenState extends State<Searchscreen> {
               ),
               const Spacer(),
               ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.black, // background
+                  ),
                   onPressed: () {
                     print(
                         "sending user name to create chat room search result $searchUserName");
                     createChatroomAndStartConversation(searchUserName);
                   },
-                  child: const Text("MESSAGE"))
+                  child: const Text(
+                    "MESSAGE",
+                    style: TextStyle(color: Colors.white),
+                  ))
             ],
           ),
         ));
@@ -130,6 +136,15 @@ class _SearchscreenState extends State<Searchscreen> {
         ),
         body: Stack(
           children: [
+            searchResult == true
+                ? Padding(
+                    padding: const EdgeInsets.only(top: 90),
+                    child: searchListTile(),
+                  )
+                : Container(
+                    child:
+                        Lottie.asset("assets/images/lf30_editor_njh8kqpd.json"),
+                  ),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
@@ -139,12 +154,15 @@ class _SearchscreenState extends State<Searchscreen> {
                     child: Row(
                       children: [
                         Expanded(
-                          child: TextField(
-                            controller: searchTextEditingController,
-                            decoration: const InputDecoration(
-                                hintText: "     Search UserName ....",
-                                hintStyle: TextStyle(color: Colors.black),
-                                border: InputBorder.none),
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: TextField(
+                              controller: searchTextEditingController,
+                              decoration: const InputDecoration(
+                                  hintText: " Search UserName ....",
+                                  hintStyle: TextStyle(color: Colors.black),
+                                  border: InputBorder.none),
+                            ),
                           ),
                         ),
                         InkWell(
@@ -161,12 +179,6 @@ class _SearchscreenState extends State<Searchscreen> {
                       ],
                     ),
                   ),
-                  searchResult == true
-                      ? searchListTile()
-                      : Container(
-                          child: Lottie.asset(
-                              "assets/images/lf30_editor_njh8kqpd.json"),
-                        ),
                 ],
               ),
             ),

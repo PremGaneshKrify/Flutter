@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:chatting_using_firebase/helper/constants.dart';
 import 'package:chatting_using_firebase/helper/helperfunctions.dart';
 import 'package:chatting_using_firebase/services/auth.dart';
+import 'package:chatting_using_firebase/services/database.dart';
 import 'package:chatting_using_firebase/views/searchscreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -25,6 +26,7 @@ class _ChatRoomState extends State<ChatRoom> {
   String? user;
   AuthServices authServices = AuthServices();
   HelperFunctions helperFunctions = HelperFunctions();
+
   String? token;
 
   chatRoomList() {
@@ -32,27 +34,26 @@ class _ChatRoomState extends State<ChatRoom> {
         .collection("ChatRoom")
         .where("users", arrayContains: Constants.myName)
         .snapshots();
+
     return StreamBuilder<QuerySnapshot>(
         stream: chatRoomStream,
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasError) {
             return const Text('Something went wrong');
           }
-
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Text("Loading");
           }
-
           return ListView(
             children: snapshot.data!.docs.map((DocumentSnapshot document) {
               Map<String, dynamic> data =
                   document.data()! as Map<String, dynamic>;
               return MessageTile(
-                ChatRoomID: data["chatRoomId"],
                 userName: data["chatRoomId"]
                     .toString()
                     .replaceAll("-", "")
                     .replaceAll(Constants.myName, ''),
+                chatRoomID: data["chatRoomId"],
               );
             }).toList(),
           );
@@ -148,25 +149,46 @@ class _ChatRoomState extends State<ChatRoom> {
   }
 }
 
-class MessageTile extends StatelessWidget {
+class MessageTile extends StatefulWidget {
   final String userName;
-
-  final String ChatRoomID;
+  final String chatRoomID;
   const MessageTile(
-      {Key? key, required this.userName, required this.ChatRoomID})
+      {Key? key, required this.userName, required this.chatRoomID})
       : super(key: key);
 
   @override
+  State<MessageTile> createState() => _MessageTileState();
+}
+
+class _MessageTileState extends State<MessageTile> {
+  DatabaseMethods databaseMethods = DatabaseMethods();
+  late QuerySnapshot searchsnapshot;
+  String? searchUsertoken;
+  @override
   Widget build(BuildContext context) {
+    print("reecviced data ${widget.userName}");
     return GestureDetector(
-      onTap: (() {
+      onTap: (() async {
+        await databaseMethods.getUserByUserName(widget.userName).then((value) {
+          setState(() {
+            searchsnapshot = value;
+          });
+          searchsnapshot = value;
+          setState(() {
+            searchUsertoken = searchsnapshot.docs[0]["token"];
+          });
+        });
+
+        log("____________________________________________________________");
+        print("user token from chatroom $searchUsertoken");
+        log("____________________________________________________________");
         Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => ConversationScreen(
-              chatRoomId: ChatRoomID.toString(),
-              searchResultName: userName,
-              rectoken: "",
+              chatRoomId: widget.chatRoomID.toString(),
+              searchResultName: widget.userName,
+              searchUserToken: searchUsertoken!,
             ),
           ),
         );
@@ -183,10 +205,12 @@ class MessageTile extends StatelessWidget {
                 height: 50,
                 width: 50,
                 decoration: BoxDecoration(
-                    color: Colors.grey,
+                    color: Colors.white,
                     borderRadius: BorderRadius.circular(50)),
                 child: Center(
-                    child: Text(userName.substring(0, 1).toUpperCase())),
+                    child: Text(widget.userName.substring(0, 1).toUpperCase())),
+                //   child: Center(
+                //       child: Lottie.asset("assets/images/pofile.male.json")),
               ),
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.03,
@@ -194,7 +218,7 @@ class MessageTile extends StatelessWidget {
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.7,
                 child: Text(
-                  userName,
+                  widget.userName,
                   style: const TextStyle(fontSize: 20),
                 ),
               ),
