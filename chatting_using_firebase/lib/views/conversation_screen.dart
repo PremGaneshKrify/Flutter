@@ -1,15 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
-
+import 'dart:developer';
 import 'package:chatting_using_firebase/helper/constants.dart';
-import 'package:chatting_using_firebase/main.dart';
 import 'package:chatting_using_firebase/services/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart' as http;
 import 'package:lottie/lottie.dart';
+import '../helper/helperfunctions.dart';
 
 class ConversationScreen extends StatefulWidget {
   final String chatRoomId;
@@ -35,9 +34,21 @@ class _ConversationScreenState extends State<ConversationScreen> {
   String? token;
   String? currentUsertoken;
   bool sendbutton = false;
+  var count = 0;
   @override
   void initState() {
+    HelperFunctions.saveSearchUserNameSharedPreference(widget.searchResultName);
+    requestPermission();
+
+    HelperFunctions.saveStopNotificationsSharedPreference(true);
+    count = 1;
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    HelperFunctions.saveSearchUserNameSharedPreference('null');
+    super.dispose();
   }
 
   chatMessageList() {
@@ -68,6 +79,8 @@ class _ConversationScreenState extends State<ConversationScreen> {
                 const Duration(milliseconds: 1),
                 () => _scrollController
                     .jumpTo(_scrollController.position.maxScrollExtent));
+
+            //have to play sound here
             return Padding(
                 padding: const EdgeInsets.all(6.0),
                 child: data["sendBy"] != Constants.myName
@@ -131,23 +144,23 @@ class _ConversationScreenState extends State<ConversationScreen> {
     );
   }
 
-  void showNotification() {
-    setState(() {});
-    flutterLocalNotificationsPlugin.show(
-      0,
-      "Testing ",
-      "How you doing  ",
-      NotificationDetails(
-        android: AndroidNotificationDetails(channel.id, channel.name,
-            importance: Importance.high,
-            color: Colors.yellow,
-            playSound: true,
-            icon: '@mipmap/ic_launcher'),
-      ),
-    );
-  }
+  // void showNotification() {
+  //   setState(() {});
+  //   flutterLocalNotificationsPlugin.show(
+  //     0,
+  //     "Testing ",
+  //     "How you doing  ",
+  //     NotificationDetails(
+  //       android: AndroidNotificationDetails(channel.id, channel.name,
+  //           importance: Importance.high,
+  //           color: Colors.yellow,
+  //           playSound: true,
+  //           icon: '@mipmap/ic_launcher'),
+  //     ),
+  //   );
+  // }
 
-  sendNotification(String title, String token) async {
+  sendNotification(String title, String body, String token) async {
     final data = {
       'click_action': 'FLUTTER_NOTIFICATION_CLICK',
       'id': '1',
@@ -166,7 +179,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
               body: jsonEncode(<String, dynamic>{
                 'notification': <String, dynamic>{
                   'title': title,
-                  'body': 'you have a new message'
+                  'body': body,
                 },
                 'priority': 'high',
                 'data': data,
@@ -174,9 +187,9 @@ class _ConversationScreenState extends State<ConversationScreen> {
               }));
 
       if (response.statusCode == 200) {
-        print("Yeh notificatin is sended");
+        log("Yeh notificatin is sended");
       } else {
-        print("Error");
+        log("Error");
       }
     } catch (e) {}
   }
@@ -225,9 +238,6 @@ class _ConversationScreenState extends State<ConversationScreen> {
       body: Stack(
         children: [
           Container(
-            child: Image.asset("assets/images/wp4410724.webp"),
-          ),
-          Container(
             height: MediaQuery.of(context).size.height,
             width: MediaQuery.of(context).size.width,
             color: Colors.white,
@@ -253,8 +263,12 @@ class _ConversationScreenState extends State<ConversationScreen> {
                       ),
                       InkWell(
                         onTap: () {
-                          sendNotification(messageTextEditingController.text,
-                              widget.searchUserToken);
+                          sendNotification(
+                            Constants.myName,
+                            messageTextEditingController.text,
+                            widget.searchUserToken,
+                          );
+
                           sendMessage();
                           messageTextEditingController.clear();
                         },
@@ -277,7 +291,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                 ),
               ],
             ),
-          )
+          ),
         ],
       ),
     );

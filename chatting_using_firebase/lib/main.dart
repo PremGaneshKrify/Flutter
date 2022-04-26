@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:chatting_using_firebase/helper/authenticate.dart';
 import 'package:chatting_using_firebase/views/chatrooms_screen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -19,14 +18,13 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
 Future<void> main() async {
-
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(channel);
-       
+
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
     alert: true,
     badge: true,
@@ -42,14 +40,31 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  String? searchUserName;
   var v;
   bool? userIsLoggedIn;
+  bool? stop;
   getLoggedInState() async {
     v = await HelperFunctions.getUserNameSharedPreference();
     await HelperFunctions.getUserLoggedInSharedPreference().then((value) {
       setState(() {
         userIsLoggedIn = value;
       });
+      print("___________________________________________________________-");
+      print(userIsLoggedIn);
+    });
+  }
+
+  getSearchUserName(RemoteMessage message) async {
+    print("Get Searcg USer Name method Called............................");
+    var v = await HelperFunctions.getSearchUserNameSharedPreference();
+    print("The value of v is : ");
+    print(v);
+
+    setState(() {
+      searchUserName = v;
+
+      showstopNotification(message, v!);
     });
   }
 
@@ -58,9 +73,41 @@ class _MyAppState extends State<MyApp> {
     getLoggedInState();
     super.initState();
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      getSearchUserName(message);
+    });
+  }
+
+  showstopNotification(RemoteMessage message, String userName) {
+    /// firebase messaging to open a app
+    // FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+    //   print('A new onMessageOpenedApp event was published!');
+    //   RemoteNotification? notification = message.notification;
+
+    //   AndroidNotification? android = message.notification?.android;
+    //   if (notification != null && android != null) {
+    //     if (true) {
+    //       showDialog(
+    //           context: context,
+    //           builder: (_) {
+    //             return AlertDialog(
+    //               title: Text(notification.title.toString()),
+    //               content: SingleChildScrollView(
+    //                 child: Column(
+    //                   crossAxisAlignment: CrossAxisAlignment.start,
+    //                   children: [Text(notification.body.toString())],
+    //                 ),
+    //               ),
+    //             );
+    //           });
+    //     } else {}
+    //   }
+    // });
+    if (message.notification!.title != userName) {
       RemoteNotification? notification = message.notification;
       AndroidNotification? android = message.notification?.android;
       if (notification != null && android != null) {
+        print(
+            "Fire base called...IFCASE....message..${message.notification!.title}...userName...$userName..........");
         flutterLocalNotificationsPlugin.show(
             notification.hashCode,
             notification.title,
@@ -69,41 +116,20 @@ class _MyAppState extends State<MyApp> {
               android: AndroidNotificationDetails(
                 channel.id,
                 channel.name,
-                color: Colors.pink,
+                color: Colors.black,
                 playSound: true,
                 icon: '@mipmap/ic_launcher',
               ),
             ));
       }
-    });
-
-    /// firebase messaging when app is open
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      print('A new onMessageOpenedApp event was published!');
-      RemoteNotification? notification = message.notification;
-
-      AndroidNotification? android = message.notification?.android;
-      if (notification != null && android != null) {
-        showDialog(
-            context: context,
-            builder: (_) {
-              return AlertDialog(
-                title: Text(notification.title.toString()),
-                content: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [Text(notification.body.toString())],
-                  ),
-                ),
-              );
-            });
-      }
-    });
+    } else {
+      print(
+          "Fire base called...ELSECASE.........message..${message.notification!.title}....userName..$userName.........");
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    log(userIsLoggedIn.toString());
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',

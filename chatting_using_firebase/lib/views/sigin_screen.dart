@@ -9,6 +9,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 import '../helper/helperfunctions.dart';
+
 class SignInScreen extends StatefulWidget {
   final Function toggleView;
   const SignInScreen(this.toggleView, {Key? key}) : super(key: key);
@@ -28,7 +29,9 @@ class _SignInScreenState extends State<SignInScreen> {
 
   signIn() {
     if (formKey.currentState!.validate()) {
-      isLoading = true;
+      setState(() {
+        isLoading = true;
+      });
       log("_____________________________________________----");
       log(" if logic ${formKey.currentState!.validate()}");
       log("user entered data");
@@ -78,6 +81,7 @@ class _SignInScreenState extends State<SignInScreen> {
               HelperFunctions.saveUserEmailSharedPreference(
                   emailTextEditingcontroller.text);
               HelperFunctions.saveUserLoggedInSharedPreference(true);
+              HelperFunctions.saveSearchUserNameSharedPreference('');
             });
 
             Navigator.pushReplacement(context,

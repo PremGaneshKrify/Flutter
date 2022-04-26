@@ -208,9 +208,10 @@ class _MessageTileState extends State<MessageTile> {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(50)),
                 child: Center(
-                    child: Text(widget.userName.substring(0, 1).toUpperCase())),
-                //   child: Center(
-                //       child: Lottie.asset("assets/images/pofile.male.json")),
+                  child: Text(
+                    widget.userName.substring(0, 1).toUpperCase(),
+                  ),
+                ),
               ),
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.03,
