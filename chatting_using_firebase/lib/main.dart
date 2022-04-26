@@ -17,14 +17,32 @@ const AndroidNotificationChannel channel = AndroidNotificationChannel(
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
+Future<void> backgroundHandler(RemoteMessage message) async {
+  RemoteNotification? notification = message.notification;
+  AndroidNotification? android = message.notification?.android;
+  return flutterLocalNotificationsPlugin.show(
+      notification.hashCode,
+      notification!.title,
+      notification.body,
+      NotificationDetails(
+        android: AndroidNotificationDetails(
+          channel.id,
+          channel.name,
+          color: Colors.black,
+          playSound: true,
+          icon: '@mipmap/ic_launcher',
+        ),
+      ));
+}
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  FirebaseMessaging.onBackgroundMessage(backgroundHandler);
   await flutterLocalNotificationsPlugin
       .resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(channel);
-
   await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
     alert: true,
     badge: true,
@@ -50,20 +68,13 @@ class _MyAppState extends State<MyApp> {
       setState(() {
         userIsLoggedIn = value;
       });
-      print("___________________________________________________________-");
-      print(userIsLoggedIn);
     });
   }
 
   getSearchUserName(RemoteMessage message) async {
-    print("Get Searcg USer Name method Called............................");
     var v = await HelperFunctions.getSearchUserNameSharedPreference();
-    print("The value of v is : ");
-    print(v);
-
     setState(() {
       searchUserName = v;
-
       showstopNotification(message, v!);
     });
   }
@@ -75,33 +86,50 @@ class _MyAppState extends State<MyApp> {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       getSearchUserName(message);
     });
+    // firebase messaging to open a app
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      RemoteNotification? notification = message.notification;
+      AndroidNotification? android = message.notification?.android;
+      if (notification != null && android != null) {
+        if (true) {
+          showDialog(
+              context: context,
+              builder: (_) {
+                return AlertDialog(
+                  title: Text(notification.title.toString()),
+                  content: SingleChildScrollView(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [Text(notification.body.toString())],
+                    ),
+                  ),
+                );
+              });
+        }
+      }
+    });
+    // FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    //   FirebaseMessaging.onBackgroundMessage((RemoteMessage message) {
+    //     RemoteNotification? notification = message.notification;
+    //     AndroidNotification? android = message.notification?.android;
+    //     return flutterLocalNotificationsPlugin.show(
+    //         notification.hashCode,
+    //         notification!.title,
+    //         notification.body,
+    //         NotificationDetails(
+    //           android: AndroidNotificationDetails(
+    //             channel.id,
+    //             channel.name,
+    //             color: Colors.black,
+    //             playSound: true,
+    //             icon: '@mipmap/ic_launcher',
+    //           ),
+    //         ));
+    //   });
+    // });
   }
 
   showstopNotification(RemoteMessage message, String userName) {
-    /// firebase messaging to open a app
-    // FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-    //   print('A new onMessageOpenedApp event was published!');
-    //   RemoteNotification? notification = message.notification;
-
-    //   AndroidNotification? android = message.notification?.android;
-    //   if (notification != null && android != null) {
-    //     if (true) {
-    //       showDialog(
-    //           context: context,
-    //           builder: (_) {
-    //             return AlertDialog(
-    //               title: Text(notification.title.toString()),
-    //               content: SingleChildScrollView(
-    //                 child: Column(
-    //                   crossAxisAlignment: CrossAxisAlignment.start,
-    //                   children: [Text(notification.body.toString())],
-    //                 ),
-    //               ),
-    //             );
-    //           });
-    //     } else {}
-    //   }
-    // });
     if (message.notification!.title != userName) {
       RemoteNotification? notification = message.notification;
       AndroidNotification? android = message.notification?.android;
