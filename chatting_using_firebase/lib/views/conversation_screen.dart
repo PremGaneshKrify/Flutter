@@ -93,7 +93,10 @@ class _ConversationScreenState extends State<ConversationScreen> {
                           margin: const EdgeInsets.symmetric(vertical: 1),
                           decoration: BoxDecoration(
                             color: const Color.fromARGB(255, 18, 98, 21),
-                            borderRadius: BorderRadius.circular(20),
+                            borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(40),
+                                topRight: Radius.circular(40),
+                                bottomRight: Radius.circular(40)),
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.grey.withOpacity(0.5),
@@ -112,7 +115,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                               Text(
                                 data['time'].toString(),
                                 style: const TextStyle(
-                                    color: Colors.white, fontSize: 10),
+                                    color: Colors.grey, fontSize: 10),
                               ),
                             ],
                           ),
@@ -128,7 +131,10 @@ class _ConversationScreenState extends State<ConversationScreen> {
                           margin: const EdgeInsets.symmetric(vertical: 1),
                           decoration: BoxDecoration(
                             color: const Color.fromARGB(255, 52, 59, 66),
-                            borderRadius:  const BorderRadius.only(topLeft: ),
+                            borderRadius: const BorderRadius.only(
+                                topLeft: Radius.circular(40),
+                                topRight: Radius.circular(40),
+                                bottomLeft: Radius.circular(40)),
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.grey.withOpacity(0.5),
@@ -147,7 +153,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                               Text(
                                 data['time'].toString(),
                                 style: const TextStyle(
-                                    color: Colors.white, fontSize: 10),
+                                    color: Colors.grey, fontSize: 10),
                               ),
                             ],
                           ),

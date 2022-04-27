@@ -1,5 +1,3 @@
-// ignore_for_file: avoid_print
-
 import 'dart:developer';
 
 import 'package:chatting_using_firebase/services/auth.dart';
@@ -7,8 +5,10 @@ import 'package:chatting_using_firebase/services/database.dart';
 import 'package:chatting_using_firebase/views/chatrooms_screen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:lottie/lottie.dart';
 import '../helper/helperfunctions.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SignInScreen extends StatefulWidget {
   final Function toggleView;
@@ -18,6 +18,7 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   QuerySnapshot? snapshotUserInfo;
   DatabaseMethods databaseMethods = DatabaseMethods();
   AuthServices authServices = AuthServices();
@@ -26,6 +27,84 @@ class _SignInScreenState extends State<SignInScreen> {
   TextEditingController passwordTextEditingcontroller = TextEditingController();
   bool isLoading = false;
   String? usernamefromsignin;
+  late GoogleSignInAccount _userObj;
+  final GoogleSignIn _googleSignIn = GoogleSignIn();
+
+  // signInWithGoogle() {
+  //   _googleSignIn.signIn().then((userData) {
+  //     setState(() {
+  //       _userObj = userData!;
+  //     });
+
+  //     print("RAW DATA $_userObj");
+  //     print(_userObj.email);
+  //     print(_userObj.displayName);
+  //     print(_userObj.authHeaders);
+  //     print(_userObj.authentication);
+  //     print(_userObj.hashCode);
+  //     print(_userObj.id);
+  //     print(_userObj.photoUrl);
+  //     print(_userObj.serverAuthCode);
+  //   }).catchError((e) {
+  //     log(e.toString());
+  //   });
+
+  //   setState(() {
+  //     isLoading = true;
+  //   });
+
+  //   authServices
+  //       .signinWithEmailAndPassword(
+  //           emailTextEditingcontroller.text, passwordTextEditingcontroller.text)
+  //       .then((value) {
+  //     if (value != null) {
+  //       print("FIREBASE RESPONSE...............");
+  //       print(value.toString());
+  //       if (value.toString() == "Instance of 'Usermodel'") {
+  //       } else {
+  //         showDialog(
+  //           context: context,
+  //           builder: (ctx) => AlertDialog(
+  //             title: const Center(child: Text("Alert")),
+  //             content: Text(value.toString()),
+  //             actions: <Widget>[
+  //               FlatButton(
+  //                 onPressed: () {
+  //                   Navigator.of(ctx).pop();
+  //                   setState(() {
+  //                     isLoading = false;
+  //                   });
+  //                 },
+  //                 child: const Text("close"),
+  //               ),
+  //             ],
+  //           ),
+  //         );
+  //       }
+  //     }
+
+  //     if (value != null) {
+  //       databaseMethods
+  //           .getUserByUserEmail(emailTextEditingcontroller.text)
+  //           .then((value) async {
+  //         snapshotUserInfo = value;
+  //         HelperFunctions.saveUserNameSharedPreference(
+  //             snapshotUserInfo?.docs[0]["name"]);
+  //         print(usernamefromsignin);
+  //         setState(() {
+  //           isLoading = true;
+  //           HelperFunctions.saveUserEmailSharedPreference(
+  //               emailTextEditingcontroller.text);
+  //           HelperFunctions.saveUserLoggedInSharedPreference(true);
+  //           HelperFunctions.saveSearchUserNameSharedPreference('');
+  //         });
+
+  //         Navigator.pushReplacement(context,
+  //             MaterialPageRoute(builder: (context) => const ChatRoom()));
+  //       });
+  //     }
+  //   });
+  // }
 
   signIn() {
     if (formKey.currentState!.validate()) {
@@ -200,14 +279,46 @@ class _SignInScreenState extends State<SignInScreen> {
                           const SizedBox(
                             height: 10,
                           ),
-                          Container(
-                            decoration: BoxDecoration(
-                                gradient: const LinearGradient(
-                                    colors: [Colors.grey, Colors.black38]),
-                                borderRadius: BorderRadius.circular(250)),
-                            height: MediaQuery.of(context).size.height * 0.08,
-                            width: MediaQuery.of(context).size.width * 0.8,
-                            child: const Center(child: Text("Google")),
+                          InkWell(
+                            onTap: () {
+                              var googlesignIncredentials =
+                                  authServices.signInWithGoogle();
+                              googlesignIncredentials.then((value) {
+                                log('----------------------------------------------------------google sign info---------');
+                                log(value.toString());
+                                log(value.additionalUserInfo.toString());
+                                var v1 = value.additionalUserInfo;
+                                print(v1!.isNewUser.toString());
+                                 print(v1!.profile.toString());
+                                 
+                                 
+
+                              });
+                            },
+                            child: Container(
+                                decoration: BoxDecoration(
+                                    color: Colors.black,
+                                    borderRadius: BorderRadius.circular(250)),
+                                height:
+                                    MediaQuery.of(context).size.height * 0.08,
+                                width: MediaQuery.of(context).size.width * 0.8,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Lottie.asset(
+                                      "assets/images/googleSignupLOGO.json",
+                                      height:
+                                          MediaQuery.of(context).size.width *
+                                              0.15,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.15,
+                                    ),
+                                    const Text(
+                                      "Sign up with Google",
+                                      style: TextStyle(color: Colors.white),
+                                    )
+                                  ],
+                                )),
                           ),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
