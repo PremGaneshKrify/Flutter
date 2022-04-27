@@ -34,6 +34,15 @@ class DatabaseMethods {
   //     log(e.toString());
   //   });
   // }
+  getLastMessage(chatRoomId) {
+    return FirebaseFirestore.instance
+        .collection('ChatRoom')
+        .doc(chatRoomId)
+        .collection("chats")
+        .doc("DdeGRskoHyq2910Igrn2")
+        .collection("message")
+        .get();
+  }
 
   createChatRoom(String chatRoomId, chatRoomMap) {
     FirebaseFirestore.instance

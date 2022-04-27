@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:chatting_using_firebase/helper/constants.dart';
 import 'package:chatting_using_firebase/helper/helperfunctions.dart';
 import 'package:chatting_using_firebase/services/auth.dart';
@@ -23,11 +22,54 @@ class ChatRoom extends StatefulWidget {
 
 class _ChatRoomState extends State<ChatRoom> {
   String? currentusertoken;
+  var lastmessge;
   String? user;
   AuthServices authServices = AuthServices();
   HelperFunctions helperFunctions = HelperFunctions();
+  DatabaseMethods databaseMethods = DatabaseMethods();
 
   String? token;
+
+  JustForFun() async {
+    print(
+        "---------------Just for fun functuion started 😁---------------------");
+    final querySnapshot =
+        await FirebaseFirestore.instance.collection("ChatRoom").get();
+    final chats = querySnapshot.docs.map((e) {
+      return e.id;
+    }).toList();
+    print(chats);
+    final querySnapshot1 = await FirebaseFirestore.instance
+        .collection("ChatRoom")
+        .doc(chats[0])
+        .collection("chats")
+        .get();
+    final chats1 = querySnapshot1.docs.map((e) {
+      return e.id;
+    }).toList();
+    print(chats1);
+
+    final querySnapshot2 = await FirebaseFirestore.instance
+        .collection("ChatRoom")
+        .doc(chats[0])
+        .collection("chats")
+        .doc(chats1[0])
+        .get();
+    print(querySnapshot2["message"]);
+
+    final querySnapshot3 = await FirebaseFirestore.instance
+        .collection("ChatRoom")
+        .doc(chats[0])
+        .collection("chats")
+        .orderBy("time", descending: false)
+        .get()
+        .then((value) => null);
+    //  print(querySnapshot3.docs.map((e) => print(e.id)));
+    //orderBy("time", descending: false).snapshots()
+
+    print(
+        "---------------Just for fun functuion Ended 😁---------------------");
+  }
 
   chatRoomList() {
     final Stream<QuerySnapshot> chatRoomStream = FirebaseFirestore.instance
@@ -48,12 +90,14 @@ class _ChatRoomState extends State<ChatRoom> {
             children: snapshot.data!.docs.map((DocumentSnapshot document) {
               Map<String, dynamic> data =
                   document.data()! as Map<String, dynamic>;
+              databaseMethods.getLastMessage(data["ChatRoom"]);
               return MessageTile(
                 userName: data["chatRoomId"]
                     .toString()
                     .replaceAll("-", "")
                     .replaceAll(Constants.myName, ''),
                 chatRoomID: data["chatRoomId"],
+                lastmessage: data["time"].toString(),
               );
             }).toList(),
           );
@@ -73,8 +117,6 @@ class _ChatRoomState extends State<ChatRoom> {
         .collection("users")
         .doc(FirebaseAuth.instance.currentUser!.uid)
         .set({'token': token}, SetOptions(merge: true));
-    print(token);
-    log("-----------------------store token-----------------------");
   }
 
   getUserInfo() async {
@@ -87,6 +129,7 @@ class _ChatRoomState extends State<ChatRoom> {
 
   @override
   Widget build(BuildContext context) {
+    JustForFun();
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -152,8 +195,12 @@ class _ChatRoomState extends State<ChatRoom> {
 class MessageTile extends StatefulWidget {
   final String userName;
   final String chatRoomID;
+  final String lastmessage;
   const MessageTile(
-      {Key? key, required this.userName, required this.chatRoomID})
+      {Key? key,
+      required this.userName,
+      required this.chatRoomID,
+      required this.lastmessage})
       : super(key: key);
 
   @override
@@ -178,10 +225,6 @@ class _MessageTileState extends State<MessageTile> {
             searchUsertoken = searchsnapshot.docs[0]["token"];
           });
         });
-
-        log("____________________________________________________________");
-        print("user token from chatroom $searchUsertoken");
-        log("____________________________________________________________");
         Navigator.push(
           context,
           MaterialPageRoute(
@@ -195,9 +238,8 @@ class _MessageTileState extends State<MessageTile> {
       }),
       child: Padding(
         padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
-        child: SizedBox(
-          height: 80,
-          width: 30,
+        child: Container(
+          color: Colors.transparent,
           child: Center(
               child: Row(
             children: [
@@ -216,13 +258,27 @@ class _MessageTileState extends State<MessageTile> {
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.03,
               ),
-              SizedBox(
-                width: MediaQuery.of(context).size.width * 0.7,
-                child: Text(
-                  widget.userName,
-                  style: const TextStyle(fontSize: 20),
-                ),
-              ),
+              Column(
+                children: [
+                  Container(
+                    color: Colors.transparent,
+                    width: MediaQuery.of(context).size.width * 0.7,
+                    child: Text(
+                      widget.userName,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 20),
+                    ),
+                  ),
+                  Container(
+                    color: Colors.transparent,
+                    width: MediaQuery.of(context).size.width * 0.7,
+                    child: Text(
+                      widget.lastmessage,
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                  ),
+                ],
+              )
             ],
           )),
         ),

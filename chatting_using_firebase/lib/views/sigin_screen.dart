@@ -105,9 +105,6 @@ class _SignInScreenState extends State<SignInScreen> {
       body: Builder(builder: (context) {
         return Stack(
           children: [
-            isLoading == true
-                ? Center(child: Lottie.asset("assets/images/loading.json"))
-                : const SizedBox(),
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Padding(
@@ -245,6 +242,15 @@ class _SignInScreenState extends State<SignInScreen> {
                 ),
               ),
             ),
+            isLoading == true
+                ? SizedBox(
+                    height: MediaQuery.of(context).size.height,
+                    width: MediaQuery.of(context).size.width,
+                    child: Center(
+                        child: Lottie.asset("assets/images/loading.json",
+                            height: 250, frameRate: FrameRate(240))),
+                  )
+                : const SizedBox(),
           ],
         );
       }),

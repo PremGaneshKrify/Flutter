@@ -19,7 +19,6 @@ final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
 
 Future<void> backgroundHandler(RemoteMessage message) async {
   RemoteNotification? notification = message.notification;
-  AndroidNotification? android = message.notification?.android;
   return flutterLocalNotificationsPlugin.show(
       notification.hashCode,
       notification!.title,
@@ -72,12 +71,19 @@ class _MyAppState extends State<MyApp> {
   }
 
   getSearchUserName(RemoteMessage message) async {
-    var v = await HelperFunctions.getSearchUserNameSharedPreference();
+    String? v = await HelperFunctions.getSearchUserNameSharedPreference();
     setState(() {
       searchUserName = v;
-      showstopNotification(message, v!);
     });
+    showstopNotification(message, v!);
   }
+
+
+
+
+
+
+
 
   @override
   void initState() {

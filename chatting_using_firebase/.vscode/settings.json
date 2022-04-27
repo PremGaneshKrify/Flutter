@@ -8,5 +8,9 @@
         "Schyler",
         "Sigin",
         "Upscreen"
-    ]
+    ],
+    "window.autoDetectColorScheme": true,
+    "files.autoSave": "afterDelay",
+    "editor.bracketPairColorization.enabled": true,
+    "editor.bracketPairColorization.independentColorPoolPerBracketType": true
 }

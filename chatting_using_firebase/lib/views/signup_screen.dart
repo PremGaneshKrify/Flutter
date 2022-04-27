@@ -254,8 +254,14 @@ class _SignUpscreenState extends State<SignUpscreen> {
                 ),
               ),
               isLoading == true
-                  ? Center(child: Lottie.asset("assets/images/loading.json"))
-                  : const SizedBox()
+                  ? SizedBox(
+                      height: MediaQuery.of(context).size.height,
+                      width: MediaQuery.of(context).size.width,
+                      child: Center(
+                          child: Lottie.asset("assets/images/loading.json",
+                              height: 250, frameRate: FrameRate(240))),
+                    )
+                  : const SizedBox(),
             ],
           ),
         ),

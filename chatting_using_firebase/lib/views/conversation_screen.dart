@@ -39,7 +39,6 @@ class _ConversationScreenState extends State<ConversationScreen> {
   void initState() {
     HelperFunctions.saveSearchUserNameSharedPreference(widget.searchResultName);
     requestPermission();
-
     HelperFunctions.saveStopNotificationsSharedPreference(true);
     count = 1;
     super.initState();
@@ -58,6 +57,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
         .collection("chats")
         .orderBy("time", descending: false)
         .snapshots();
+
     return StreamBuilder<QuerySnapshot>(
       stream: messagesList,
       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -79,7 +79,6 @@ class _ConversationScreenState extends State<ConversationScreen> {
                 const Duration(milliseconds: 1),
                 () => _scrollController
                     .jumpTo(_scrollController.position.maxScrollExtent));
-
             //have to play sound here
             return Padding(
                 padding: const EdgeInsets.all(6.0),
@@ -103,11 +102,19 @@ class _ConversationScreenState extends State<ConversationScreen> {
                               ),
                             ],
                           ),
-                          child: Text(
-                            data['message'],
-                            style: const TextStyle(
-                              color: Colors.white,
-                            ),
+                          child: Column(
+                            children: [
+                              Text(
+                                data['message'],
+                                style: const TextStyle(
+                                    color: Colors.white, fontSize: 16),
+                              ),
+                              Text(
+                                data['time'].toString(),
+                                style: const TextStyle(
+                                    color: Colors.white, fontSize: 10),
+                              ),
+                            ],
                           ),
                         ),
                       )
@@ -121,7 +128,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                           margin: const EdgeInsets.symmetric(vertical: 1),
                           decoration: BoxDecoration(
                             color: const Color.fromARGB(255, 52, 59, 66),
-                            borderRadius: BorderRadius.circular(20),
+                            borderRadius:  const BorderRadius.only(topLeft: ),
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.grey.withOpacity(0.5),
@@ -130,11 +137,19 @@ class _ConversationScreenState extends State<ConversationScreen> {
                               ),
                             ],
                           ),
-                          child: Text(
-                            data['message'],
-                            style: const TextStyle(
-                              color: Colors.white,
-                            ),
+                          child: Column(
+                            children: [
+                              Text(
+                                data['message'],
+                                style: const TextStyle(
+                                    color: Colors.white, fontSize: 16),
+                              ),
+                              Text(
+                                data['time'].toString(),
+                                style: const TextStyle(
+                                    color: Colors.white, fontSize: 10),
+                              ),
+                            ],
                           ),
                         ),
                       ));
