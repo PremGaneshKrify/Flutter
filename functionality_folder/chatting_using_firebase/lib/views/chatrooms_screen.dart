@@ -22,8 +22,6 @@ class ChatRoom extends StatefulWidget {
 
 class _ChatRoomState extends State<ChatRoom> {
   String? currentusertoken;
-  String? lastmessage;
-  var i;
   String? user;
   AuthServices authServices = AuthServices();
   HelperFunctions helperFunctions = HelperFunctions();
@@ -32,15 +30,15 @@ class _ChatRoomState extends State<ChatRoom> {
   String? token;
   @override
   void initState() {
-    FirebaseFirestore.instance
-        .collection("/ChatRoom/$i/chats")
-        .orderBy("time", descending: true)
-        .snapshots()
-        .listen((event) {
-      setState(() {
-        lastmessage = event.docs[0]["message"];
-      });
-    });
+    // FirebaseFirestore.instance
+    //     .collection("/ChatRoom/$i/chats")
+    //     .orderBy("time", descending: true)
+    //     .snapshots()
+    //     .listen((event) {
+    //   setState(() {
+    //     lastmessage = event.docs[0]["message"];
+    //  });
+    //  });
 
     getUserInfo();
     storeNotificationToken();
@@ -73,34 +71,32 @@ class _ChatRoomState extends State<ChatRoom> {
               Map<String, dynamic> data =
                   document.data()! as Map<String, dynamic>;
 
-              i = data["chatRoomId"];
-              print(i);
-              getlastmes(data["chatRoomId"]);
               return MessageTile(
                 userName: data["chatRoomId"]
                     .toString()
                     .replaceAll("-", "")
                     .replaceAll(Constants.myName, ''),
-                chatRoomID: data["chatRoomId"],
-                lastmessage:
-                    lastmessage == null ? 'getting null' : lastmessage!,
+                chatRoomID: data["chatRoomId"], lastmessage: '',
+                chatroomid: data["chatRoomId"],
+                // lastmessage:
+                //     lastmessage == null ? 'getting null' : lastmessage!,
               );
             }).toList(),
           );
         });
   }
 
-  getlastmes(chatid) {
-    FirebaseFirestore.instance
-        .collection("/ChatRoom/$chatid/chats")
-        .orderBy("time", descending: true)
-        .snapshots()
-        .listen((event) {
-      // setState(() {
-      lastmessage = event.docs[0]["message"];
-      // });
-    });
-  }
+  // getlastmes(chatid) {
+  //   FirebaseFirestore.instance
+  //       .collection("/ChatRoom/$chatid/chats")
+  //       .orderBy("time", descending: true)
+  //       .snapshots()
+  //       .listen((event) {
+  //     // setState(() {
+  //     lastmessage = event.docs[0]["message"];
+  //     // });
+  //   });
+  // }
 
   storeNotificationToken() async {
     token = await FirebaseMessaging.instance.getToken();
@@ -194,11 +190,13 @@ class MessageTile extends StatefulWidget {
   final String userName;
   final String chatRoomID;
   final String lastmessage;
+  final String? chatroomid;
   const MessageTile(
       {Key? key,
       required this.userName,
       required this.chatRoomID,
-      required this.lastmessage})
+      required this.lastmessage,
+      required this.chatroomid})
       : super(key: key);
 
   @override
@@ -209,10 +207,19 @@ class _MessageTileState extends State<MessageTile> {
   DatabaseMethods databaseMethods = DatabaseMethods();
   late QuerySnapshot searchsnapshot;
   String? searchUsertoken;
+  var lastmessage;
 
   @override
   Widget build(BuildContext context) {
     print("reecviced data ${widget.userName}");
+    FirebaseFirestore.instance
+        .collection("/ChatRoom/${widget.chatRoomID}/chats")
+        .orderBy("time", descending: true)
+        .snapshots()
+        .listen((event) {
+      lastmessage = event.docs[0]["message"];
+    });
+
     return GestureDetector(
       onTap: (() async {
         await databaseMethods.getUserByUserName(widget.userName).then((value) {
@@ -272,7 +279,8 @@ class _MessageTileState extends State<MessageTile> {
                     color: Colors.transparent,
                     width: MediaQuery.of(context).size.width * 0.7,
                     child: Text(
-                      widget.lastmessage,
+                      lastmessage.toString(),
+                      //   'hai',
                       style: const TextStyle(fontSize: 16),
                     ),
                   ),
