@@ -35,17 +35,27 @@ class DatabaseMethods {
   //   });
   // }
   getLastMessage(chatRoomId) {
-    FirebaseFirestore.instance
-        .collection('ChatRoom')
-        .doc(chatRoomId)
-        .collection("chats")
-        .doc("RWNxd0gVd1IFx1ZaV7NF")
-        .collection("message")
-        .snapshots()
-        .listen((event) {
-      log('------------------------------------------------------------------------------$event.docs.length-----------------get last message------');
-      print(event.docs.length);
-    });
+    // FirebaseFirestore.instance
+    //     .collection("Chats /YPVl50aAv0woRGq8xjLC/messages")
+    //     .orderBy("text", descending: false)
+    //     .snapshots()
+    //     .listen((data) {
+    //   setState(() {
+    //     len = data.docs.length; // global variable of int type
+    //     messages = data.docs; // global variable of List type
+    //   });
+    // });
+
+    // FirebaseFirestore.instance
+    //     .collection('ChatRoom/$chatRoomId/chats/')
+    //     .orderBy('time', descending: false)
+    //     .snapshots()
+    //     .listen((event) {
+    //   setState(() {
+    //     var len = event.docs.length; // global variable of int type
+    //     var messages = event.docs; // global variable of List type
+    //   });
+    // });
     return FirebaseFirestore.instance
         .collection('ChatRoom')
         .doc(chatRoomId)

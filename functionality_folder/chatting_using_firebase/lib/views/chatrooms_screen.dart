@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:chatting_using_firebase/helper/constants.dart';
 import 'package:chatting_using_firebase/helper/helperfunctions.dart';
 import 'package:chatting_using_firebase/services/auth.dart';
@@ -99,6 +101,18 @@ class _ChatRoomState extends State<ChatRoom> {
               Map<String, dynamic> data =
                   document.data()! as Map<String, dynamic>;
               //lastmessage = databaseMethods.getLastMessage(data["ChatRoom"]);
+              FirebaseFirestore.instance
+                  .collection('ChatRoom/$data["chatRoomId"]/chats/')
+                  .orderBy('time', descending: false)
+                  .snapshots()
+                  .listen((event) {
+                setState(() {
+                  var len = event.docs.length; // global variable of int type
+                  var messages = event.docs; // global variable of List type
+                });
+
+                log('-----------------------------${event.docs.length}-------------------last message----------------------');
+              });
               return MessageTile(
                 userName: data["chatRoomId"]
                     .toString()
@@ -168,7 +182,7 @@ class _ChatRoomState extends State<ChatRoom> {
   Widget build(BuildContext context) {
     //JustForFun();
 
-    databaseMethods.getLastMessage('Krify Soft-ganesh');
+    // databaseMethods.getLastMessage('Krify Soft-ganesh');
     var name = Constants.myName.toUpperCase().toString();
     return Scaffold(
       appBar: AppBar(
@@ -183,7 +197,7 @@ class _ChatRoomState extends State<ChatRoom> {
             onTap: (() {
               authServices.signOut();
               authServices.googleSignOut();
-                          setState(() {
+              setState(() {
                 HelperFunctions.saveUserLoggedInSharedPreference(false);
                 HelperFunctions.saveUserNameSharedPreference("");
                 HelperFunctions.saveUserEmailSharedPreference("");
