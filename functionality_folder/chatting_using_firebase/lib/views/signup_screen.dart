@@ -17,16 +17,16 @@ class SignUpscreen extends StatefulWidget {
 }
 
 class _SignUpscreenState extends State<SignUpscreen> {
+  final formKey = GlobalKey<FormState>();
   AuthServices authServices = AuthServices();
   DatabaseMethods databaseMethods = DatabaseMethods();
-  bool isLoading = false;
-  final formKey = GlobalKey<FormState>();
   TextEditingController userNameTextEditingcontroller = TextEditingController();
   TextEditingController emailTextEditingcontroller = TextEditingController();
   TextEditingController passwordTextEditingcontroller = TextEditingController();
-  var userUID;
   bool signupbutton = true;
+  bool isLoading = false;
   String? token;
+  var userUID;
 
   @override
   void dispose() {

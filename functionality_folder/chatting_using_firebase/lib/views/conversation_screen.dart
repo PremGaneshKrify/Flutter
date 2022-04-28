@@ -9,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:lottie/lottie.dart';
 import '../helper/helperfunctions.dart';
-
 class ConversationScreen extends StatefulWidget {
   final String chatRoomId;
   final String searchResultName;

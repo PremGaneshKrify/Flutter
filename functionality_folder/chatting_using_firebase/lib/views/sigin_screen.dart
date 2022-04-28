@@ -29,94 +29,40 @@ class _SignInScreenState extends State<SignInScreen> {
   String? usernamefromsignin;
   late GoogleSignInAccount _userObj;
   final GoogleSignIn _googleSignIn = GoogleSignIn();
-
-  // signInWithGoogle() {
-  //   _googleSignIn.signIn().then((userData) {
-  //     setState(() {
-  //       _userObj = userData!;
-  //     });
-
-  //     print("RAW DATA $_userObj");
-  //     print(_userObj.email);
-  //     print(_userObj.displayName);
-  //     print(_userObj.authHeaders);
-  //     print(_userObj.authentication);
-  //     print(_userObj.hashCode);
-  //     print(_userObj.id);
-  //     print(_userObj.photoUrl);
-  //     print(_userObj.serverAuthCode);
-  //   }).catchError((e) {
-  //     log(e.toString());
-  //   });
-
-  //   setState(() {
-  //     isLoading = true;
-  //   });
-
-  //   authServices
-  //       .signinWithEmailAndPassword(
-  //           emailTextEditingcontroller.text, passwordTextEditingcontroller.text)
-  //       .then((value) {
-  //     if (value != null) {
-  //       print("FIREBASE RESPONSE...............");
-  //       print(value.toString());
-  //       if (value.toString() == "Instance of 'Usermodel'") {
-  //       } else {
-  //         showDialog(
-  //           context: context,
-  //           builder: (ctx) => AlertDialog(
-  //             title: const Center(child: Text("Alert")),
-  //             content: Text(value.toString()),
-  //             actions: <Widget>[
-  //               FlatButton(
-  //                 onPressed: () {
-  //                   Navigator.of(ctx).pop();
-  //                   setState(() {
-  //                     isLoading = false;
-  //                   });
-  //                 },
-  //                 child: const Text("close"),
-  //               ),
-  //             ],
-  //           ),
-  //         );
-  //       }
-  //     }
-
-  //     if (value != null) {
-  //       databaseMethods
-  //           .getUserByUserEmail(emailTextEditingcontroller.text)
-  //           .then((value) async {
-  //         snapshotUserInfo = value;
-  //         HelperFunctions.saveUserNameSharedPreference(
-  //             snapshotUserInfo?.docs[0]["name"]);
-  //         print(usernamefromsignin);
-  //         setState(() {
-  //           isLoading = true;
-  //           HelperFunctions.saveUserEmailSharedPreference(
-  //               emailTextEditingcontroller.text);
-  //           HelperFunctions.saveUserLoggedInSharedPreference(true);
-  //           HelperFunctions.saveSearchUserNameSharedPreference('');
-  //         });
-
-  //         Navigator.pushReplacement(context,
-  //             MaterialPageRoute(builder: (context) => const ChatRoom()));
-  //       });
-  //     }
-  //   });
-  // }
+  var userUID;
+  googleSigin() {
+    setState(() {
+      isLoading = true;
+    });
+    var googlesignIncredentials = authServices.signInWithGoogle();
+    googlesignIncredentials.then((value) async {
+      var v = value;
+      userUID = v.user!.uid;
+      log(userUID.toString());
+      Map<String, String> userInfoMap = {
+        "name": v.user!.providerData[0].displayName!,
+        "email": v.user!.providerData[0].email!,
+      };
+      databaseMethods.uploadUserInfo(userInfoMap, userUID);
+      setState(() {
+        isLoading = true;
+        HelperFunctions.saveUserLoggedInSharedPreference(true);
+        HelperFunctions.saveUserEmailSharedPreference(
+            v.user!.providerData[0].email!);
+        HelperFunctions.saveUserNameSharedPreference(
+            v.user!.providerData[0].displayName!);
+        HelperFunctions.saveUserUIDSharedPreference(userUID!);
+      });
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => const ChatRoom()));
+    });
+  }
 
   signIn() {
     if (formKey.currentState!.validate()) {
       setState(() {
         isLoading = true;
       });
-      log("_____________________________________________----");
-      log(" if logic ${formKey.currentState!.validate()}");
-      log("user entered data");
-      log(emailTextEditingcontroller.text);
-      log(passwordTextEditingcontroller.text);
-
       authServices
           .signinWithEmailAndPassword(emailTextEditingcontroller.text,
               passwordTextEditingcontroller.text)
@@ -281,19 +227,7 @@ class _SignInScreenState extends State<SignInScreen> {
                           ),
                           InkWell(
                             onTap: () {
-                              var googlesignIncredentials =
-                                  authServices.signInWithGoogle();
-                              googlesignIncredentials.then((value) {
-                                log('----------------------------------------------------------google sign info---------');
-                                log(value.toString());
-                                log(value.additionalUserInfo.toString());
-                                var v1 = value.additionalUserInfo;
-                                print(v1!.isNewUser.toString());
-                                 print(v1!.profile.toString());
-                                 
-                                 
-
-                              });
+                              googleSigin();
                             },
                             child: Container(
                                 decoration: BoxDecoration(

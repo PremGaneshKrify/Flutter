@@ -22,7 +22,8 @@ class ChatRoom extends StatefulWidget {
 
 class _ChatRoomState extends State<ChatRoom> {
   String? currentusertoken;
-  var lastmessge;
+  var lastmessage;
+  var lastmess;
   String? user;
   AuthServices authServices = AuthServices();
   HelperFunctions helperFunctions = HelperFunctions();
@@ -48,7 +49,6 @@ class _ChatRoomState extends State<ChatRoom> {
       return e.id;
     }).toList();
     print(chats1);
-
     final querySnapshot2 = await FirebaseFirestore.instance
         .collection("ChatRoom")
         .doc(chats[0])
@@ -56,7 +56,9 @@ class _ChatRoomState extends State<ChatRoom> {
         .doc(chats1[0])
         .get();
     print(querySnapshot2["message"]);
-
+    setState(() {
+      lastmess = querySnapshot2["message"];
+    });
     final querySnapshot3 = await FirebaseFirestore.instance
         .collection("ChatRoom")
         .doc(chats[0])
@@ -76,6 +78,12 @@ class _ChatRoomState extends State<ChatRoom> {
         .collection("ChatRoom")
         .where("users", arrayContains: Constants.myName)
         .snapshots();
+    final Stream<QuerySnapshot> lastmessageSteam = FirebaseFirestore.instance
+        .collection('ChatRoom')
+        .doc()
+        .collection("chats")
+        .orderBy("time", descending: false)
+        .snapshots();
 
     return StreamBuilder<QuerySnapshot>(
         stream: chatRoomStream,
@@ -90,20 +98,49 @@ class _ChatRoomState extends State<ChatRoom> {
             children: snapshot.data!.docs.map((DocumentSnapshot document) {
               Map<String, dynamic> data =
                   document.data()! as Map<String, dynamic>;
-              databaseMethods.getLastMessage(data["ChatRoom"]);
+              //lastmessage = databaseMethods.getLastMessage(data["ChatRoom"]);
               return MessageTile(
                 userName: data["chatRoomId"]
                     .toString()
                     .replaceAll("-", "")
                     .replaceAll(Constants.myName, ''),
                 chatRoomID: data["chatRoomId"],
-                lastmessage: data["time"].toString(),
+                lastmessage: 'gfg',
               );
             }).toList(),
           );
         });
   }
+//   chatRoomList() {
+//     final Stream<QuerySnapshot> chatRoomStream = FirebaseFirestore.instance
+//         .collection("ChatRoom")
+//         .where("users", arrayContains: Constants.myName)
+//         .snapshots();
+//     final Stream<QuerySnapshot> lastmessageSteam = FirebaseFirestore.instance
+//         .collection('ChatRoom')
+//         .doc()
+//         .collection("chats")
+//         .orderBy("time", descending: false)
+//         .snapshots();
 
+//     return StreamBuilder<QuerySnapshot>(
+//         stream: chatRoomStream,
+//         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+//           if (snapshot.hasError) {
+//             return const Text('Something went wrong');
+//           }
+//           if (snapshot.connectionState == ConnectionState.waiting) {
+//             return const Text("Loading");
+//           }
+//           return StreamBuilder<QuerySnapshot> (
+
+//              stream: chatRoomStream,
+//             builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
+// return l
+
+//             } ,);
+//         });
+//   }
   @override
   void initState() {
     getUserInfo();
@@ -129,17 +166,24 @@ class _ChatRoomState extends State<ChatRoom> {
 
   @override
   Widget build(BuildContext context) {
-    JustForFun();
+    //JustForFun();
+
+    databaseMethods.getLastMessage('Krify Soft-ganesh');
+    var name = Constants.myName.toUpperCase().toString();
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text("Hello ${Constants.myName}"),
+        title: Text(
+          "Hello    $name",
+          style: const TextStyle(fontWeight: FontWeight.bold),
+        ),
         backgroundColor: Colors.black,
         actions: [
           GestureDetector(
             onTap: (() {
               authServices.signOut();
-              setState(() {
+              authServices.googleSignOut();
+                          setState(() {
                 HelperFunctions.saveUserLoggedInSharedPreference(false);
                 HelperFunctions.saveUserNameSharedPreference("");
                 HelperFunctions.saveUserEmailSharedPreference("");
@@ -211,6 +255,7 @@ class _MessageTileState extends State<MessageTile> {
   DatabaseMethods databaseMethods = DatabaseMethods();
   late QuerySnapshot searchsnapshot;
   String? searchUsertoken;
+
   @override
   Widget build(BuildContext context) {
     print("reecviced data ${widget.userName}");

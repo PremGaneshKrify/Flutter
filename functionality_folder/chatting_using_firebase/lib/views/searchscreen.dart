@@ -19,6 +19,7 @@ class _SearchscreenState extends State<Searchscreen> {
   TextEditingController searchTextEditingController = TextEditingController();
   late QuerySnapshot searchsnapshot;
   String? searchUsertoken;
+
   initiateSearch() async {
     await databaseMethods
         .getUserByUserName(searchTextEditingController.text)
@@ -28,8 +29,11 @@ class _SearchscreenState extends State<Searchscreen> {
         searchResult = true;
       });
       searchsnapshot = value;
+
       setState(() {
-        searchUsertoken = searchsnapshot.docs[0]["token"];
+        searchUsertoken = searchsnapshot.docs.isNotEmpty
+            ? searchsnapshot.docs[0]["token"]
+            : null;
       });
     });
   }
@@ -139,7 +143,18 @@ class _SearchscreenState extends State<Searchscreen> {
             searchResult == true
                 ? Padding(
                     padding: const EdgeInsets.only(top: 90),
-                    child: searchListTile(),
+                    child: searchsnapshot.docs.isEmpty
+                        ? Container(
+                            child: Column(
+                            children: [
+                              const Padding(
+                                padding: EdgeInsets.all(10),
+                                child: Text("NOTHING FOUND ENTER VALID NAME"),
+                              ),
+                              Lottie.asset("assets/images/notfound.json"),
+                            ],
+                          ))
+                        : searchListTile(),
                   )
                 : Container(
                     child:

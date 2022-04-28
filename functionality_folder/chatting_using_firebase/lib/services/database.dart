@@ -35,13 +35,23 @@ class DatabaseMethods {
   //   });
   // }
   getLastMessage(chatRoomId) {
+    FirebaseFirestore.instance
+        .collection('ChatRoom')
+        .doc(chatRoomId)
+        .collection("chats")
+        .doc("RWNxd0gVd1IFx1ZaV7NF")
+        .collection("message")
+        .snapshots()
+        .listen((event) {
+      log('------------------------------------------------------------------------------$event.docs.length-----------------get last message------');
+      print(event.docs.length);
+    });
     return FirebaseFirestore.instance
         .collection('ChatRoom')
         .doc(chatRoomId)
         .collection("chats")
-        .doc("DdeGRskoHyq2910Igrn2")
-        .collection("message")
-        .get();
+        .doc("RWNxd0gVd1IFx1ZaV7NF")
+        .collection("message");
   }
 
   createChatRoom(String chatRoomId, chatRoomMap) {
