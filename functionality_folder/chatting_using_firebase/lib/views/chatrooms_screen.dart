@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:chatting_using_firebase/helper/constants.dart';
 import 'package:chatting_using_firebase/helper/helperfunctions.dart';
 import 'package:chatting_using_firebase/services/auth.dart';
@@ -24,55 +22,29 @@ class ChatRoom extends StatefulWidget {
 
 class _ChatRoomState extends State<ChatRoom> {
   String? currentusertoken;
-  var lastmessage;
-  var lastmess;
+  String? lastmessage;
+  var i;
   String? user;
   AuthServices authServices = AuthServices();
   HelperFunctions helperFunctions = HelperFunctions();
   DatabaseMethods databaseMethods = DatabaseMethods();
 
   String? token;
-
-  JustForFun() async {
-    print(
-        "---------------Just for fun functuion started 😁---------------------");
-    final querySnapshot =
-        await FirebaseFirestore.instance.collection("ChatRoom").get();
-    final chats = querySnapshot.docs.map((e) {
-      return e.id;
-    }).toList();
-    print(chats);
-    final querySnapshot1 = await FirebaseFirestore.instance
-        .collection("ChatRoom")
-        .doc(chats[0])
-        .collection("chats")
-        .get();
-    final chats1 = querySnapshot1.docs.map((e) {
-      return e.id;
-    }).toList();
-    print(chats1);
-    final querySnapshot2 = await FirebaseFirestore.instance
-        .collection("ChatRoom")
-        .doc(chats[0])
-        .collection("chats")
-        .doc(chats1[0])
-        .get();
-    print(querySnapshot2["message"]);
-    setState(() {
-      lastmess = querySnapshot2["message"];
+  @override
+  void initState() {
+    FirebaseFirestore.instance
+        .collection("/ChatRoom/$i/chats")
+        .orderBy("time", descending: true)
+        .snapshots()
+        .listen((event) {
+      setState(() {
+        lastmessage = event.docs[0]["message"];
+      });
     });
-    final querySnapshot3 = await FirebaseFirestore.instance
-        .collection("ChatRoom")
-        .doc(chats[0])
-        .collection("chats")
-        .orderBy("time", descending: false)
-        .get()
-        .then((value) => null);
-    //  print(querySnapshot3.docs.map((e) => print(e.id)));
-    //orderBy("time", descending: false).snapshots()
 
-    print(
-        "---------------Just for fun functuion Ended 😁---------------------");
+    getUserInfo();
+    storeNotificationToken();
+    super.initState();
   }
 
   chatRoomList() {
@@ -100,66 +72,34 @@ class _ChatRoomState extends State<ChatRoom> {
             children: snapshot.data!.docs.map((DocumentSnapshot document) {
               Map<String, dynamic> data =
                   document.data()! as Map<String, dynamic>;
-              //lastmessage = databaseMethods.getLastMessage(data["ChatRoom"]);
-              FirebaseFirestore.instance
-                  .collection('ChatRoom/$data["chatRoomId"]/chats/')
-                  .orderBy('time', descending: false)
-                  .snapshots()
-                  .listen((event) {
-                setState(() {
-                  var len = event.docs.length; // global variable of int type
-                  var messages = event.docs; // global variable of List type
-                });
 
-                log('-----------------------------${event.docs.length}-------------------last message----------------------');
-              });
+              i = data["chatRoomId"];
+              print(i);
+              getlastmes(data["chatRoomId"]);
               return MessageTile(
                 userName: data["chatRoomId"]
                     .toString()
                     .replaceAll("-", "")
                     .replaceAll(Constants.myName, ''),
                 chatRoomID: data["chatRoomId"],
-                lastmessage: 'gfg',
+                lastmessage:
+                    lastmessage == null ? 'getting null' : lastmessage!,
               );
             }).toList(),
           );
         });
   }
-//   chatRoomList() {
-//     final Stream<QuerySnapshot> chatRoomStream = FirebaseFirestore.instance
-//         .collection("ChatRoom")
-//         .where("users", arrayContains: Constants.myName)
-//         .snapshots();
-//     final Stream<QuerySnapshot> lastmessageSteam = FirebaseFirestore.instance
-//         .collection('ChatRoom')
-//         .doc()
-//         .collection("chats")
-//         .orderBy("time", descending: false)
-//         .snapshots();
 
-//     return StreamBuilder<QuerySnapshot>(
-//         stream: chatRoomStream,
-//         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-//           if (snapshot.hasError) {
-//             return const Text('Something went wrong');
-//           }
-//           if (snapshot.connectionState == ConnectionState.waiting) {
-//             return const Text("Loading");
-//           }
-//           return StreamBuilder<QuerySnapshot> (
-
-//              stream: chatRoomStream,
-//             builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot){
-// return l
-
-//             } ,);
-//         });
-//   }
-  @override
-  void initState() {
-    getUserInfo();
-    storeNotificationToken();
-    super.initState();
+  getlastmes(chatid) {
+    FirebaseFirestore.instance
+        .collection("/ChatRoom/$chatid/chats")
+        .orderBy("time", descending: true)
+        .snapshots()
+        .listen((event) {
+      // setState(() {
+      lastmessage = event.docs[0]["message"];
+      // });
+    });
   }
 
   storeNotificationToken() async {

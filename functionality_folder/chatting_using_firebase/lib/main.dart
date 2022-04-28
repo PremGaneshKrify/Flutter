@@ -78,13 +78,6 @@ class _MyAppState extends State<MyApp> {
     showstopNotification(message, v!);
   }
 
-
-
-
-
-
-
-
   @override
   void initState() {
     getLoggedInState();
@@ -162,8 +155,11 @@ class _MyAppState extends State<MyApp> {
     }
   }
 
+ 
   @override
   Widget build(BuildContext context) {
+
+
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',

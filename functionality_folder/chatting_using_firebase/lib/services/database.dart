@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:http/retry.dart';
 
 class DatabaseMethods {
   getUserByUserName(String username) async {
@@ -26,44 +27,6 @@ class DatabaseMethods {
     });
   }
 
-  // uploadUserInfo(userMap, userUID) {
-  //   return FirebaseFirestore.instance
-  //       .collection('users')
-  //       .add(userUID)
-  //       .catchError((e) {
-  //     log(e.toString());
-  //   });
-  // }
-  getLastMessage(chatRoomId) {
-    // FirebaseFirestore.instance
-    //     .collection("Chats /YPVl50aAv0woRGq8xjLC/messages")
-    //     .orderBy("text", descending: false)
-    //     .snapshots()
-    //     .listen((data) {
-    //   setState(() {
-    //     len = data.docs.length; // global variable of int type
-    //     messages = data.docs; // global variable of List type
-    //   });
-    // });
-
-    // FirebaseFirestore.instance
-    //     .collection('ChatRoom/$chatRoomId/chats/')
-    //     .orderBy('time', descending: false)
-    //     .snapshots()
-    //     .listen((event) {
-    //   setState(() {
-    //     var len = event.docs.length; // global variable of int type
-    //     var messages = event.docs; // global variable of List type
-    //   });
-    // });
-    return FirebaseFirestore.instance
-        .collection('ChatRoom')
-        .doc(chatRoomId)
-        .collection("chats")
-        .doc("RWNxd0gVd1IFx1ZaV7NF")
-        .collection("message");
-  }
-
   createChatRoom(String chatRoomId, chatRoomMap) {
     FirebaseFirestore.instance
         .collection("ChatRoom")
@@ -85,13 +48,6 @@ class DatabaseMethods {
     });
   }
 
-  // getConversationMessages(String chatRoomId) async{
-  //   return FirebaseFirestore.instance
-  //       .collection("ChatRoom")
-  //       .doc(chatRoomId)
-  //       .collection("chats").orderBy("time")
-  //       .snapshots();
-  // }
   getConversationMessages(String chatRoomId) async {
     return FirebaseFirestore.instance
         .collection("ChatRoom")
@@ -107,4 +63,18 @@ class DatabaseMethods {
         .where("users", arrayContains: userName)
         .snapshots();
   }
+
+  getlastmessage(chatroomid)async {
+    String v = chatroomid.toString();
+    String mes = "";
+    FirebaseFirestore.instance
+        .collection("/ChatRoom/Krify Soft-ganesh/chats")
+        .orderBy("time", descending: true)
+        .snapshots()
+        .listen((event) {
+      mes = event.docs[0]["message"].toString();
+    });
+     return mes;
+  }
+ 
 }
