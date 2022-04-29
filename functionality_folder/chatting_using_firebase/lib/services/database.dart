@@ -1,6 +1,5 @@
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:http/retry.dart';
 
 class DatabaseMethods {
   getUserByUserName(String username) async {
@@ -64,17 +63,6 @@ class DatabaseMethods {
         .snapshots();
   }
 
-  getlastmessage(chatroomid)async {
-    String v = chatroomid.toString();
-    String mes = "";
-    FirebaseFirestore.instance
-        .collection("/ChatRoom/Krify Soft-ganesh/chats")
-        .orderBy("time", descending: true)
-        .snapshots()
-        .listen((event) {
-      mes = event.docs[0]["message"].toString();
-    });
-     return mes;
-  }
+ 
  
 }
