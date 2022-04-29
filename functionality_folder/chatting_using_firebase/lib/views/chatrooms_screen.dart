@@ -10,7 +10,6 @@ import 'package:flutter/material.dart';
 import '../helper/authenticate.dart';
 import 'conversation_screen.dart';
 import 'package:lottie/lottie.dart';
-import 'package:get/get.dart';
 
 class ChatRoom extends StatefulWidget {
   const ChatRoom({
@@ -35,13 +34,12 @@ class _ChatRoomState extends State<ChatRoom> {
   @override
   void initState() {
     getUserInfo();
-    storeNotificationToken();
     chatRoomList();
+    storeNotificationToken();
     super.initState();
   }
 
   chatRoomList() {
-    MyController controller = MyController();
     final Stream<QuerySnapshot> chatRoomStream = FirebaseFirestore.instance
         .collection("ChatRoom")
         .where("users", arrayContains: Constants.myName)
@@ -60,7 +58,7 @@ class _ChatRoomState extends State<ChatRoom> {
             children: snapshot.data!.docs.map((DocumentSnapshot document) {
               Map<String, dynamic> data =
                   document.data()! as Map<String, dynamic>;
-              controller.changeName(data["chatRoomId"]);
+
               return MessageTile(
                 userName: data["chatRoomId"]
                     .toString()
@@ -178,40 +176,24 @@ class MessageTile extends StatefulWidget {
   State<MessageTile> createState() => _MessageTileState();
 }
 
-// class MyController extends GetxController {
-//   var lastmes = "".obs;
-//   changeName(String s) {
-//     FirebaseFirestore.instance
-//         .collection("/ChatRoom/$s/chats")
-//         .orderBy("time", descending: true)
-//         .snapshots()
-//         .listen((event) {
-//       lastmes = RxString(event.docs[0]["message"].toString());
-//     });
-//     lastmes = lastmes;
-//   }
-// }
-
 class _MessageTileState extends State<MessageTile> {
-  MyController controller = MyController();
   DatabaseMethods databaseMethods = DatabaseMethods();
   late QuerySnapshot searchsnapshot;
   String? searchUsertoken;
-  var lastmessage = ''.obs;
+  var lastmessage = '';
 
   @override
   Widget build(BuildContext context) {
-    // print("reecviced data ${widget.userName}");
-    // FirebaseFirestore.instance
-    //     .collection("/ChatRoom/${widget.chatRoomID}/chats")
-    //     .orderBy("time", descending: true)
-    //     .snapshots()
-    //     .listen((event) {
-    //   lastmessage = RxString(event.docs[0]["message"].obs);
-    // setState(() {
-    //   lastmessage = event.docs[0]["message"];
-    // });
-    // });
+    print("reecviced data ${widget.userName}");
+    FirebaseFirestore.instance
+        .collection("/ChatRoom/${widget.chatRoomID}/chats")
+        .orderBy("time", descending: true)
+        .snapshots()
+        .listen((event) {
+      
+        lastmessage = event.docs[0]["message"];
+    
+    });
 
     return GestureDetector(
       onTap: (() async {
@@ -270,14 +252,10 @@ class _MessageTileState extends State<MessageTile> {
                   Container(
                     color: Colors.transparent,
                     width: MediaQuery.of(context).size.width * 0.7,
-                    child: Text('${controller.lastmes}'),
-                    // Obx(() => Text("$lastmessage")),
-
-                    // Text(
-                    //   lastmessage.toString(),
-                    //   //   'hai',
-                    //   style: const TextStyle(fontSize: 16),
-                    // ),
+                    child: Text(
+                      lastmessage.toString(),
+                      style: const TextStyle(fontSize: 16),
+                    ),
                   ),
                 ],
               )

@@ -6,8 +6,8 @@ import 'package:chatting_using_firebase/services/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import '../helper/helperfunctions.dart';
 
@@ -30,7 +30,7 @@ class ConversationScreen extends StatefulWidget {
 class _ConversationScreenState extends State<ConversationScreen> {
   TextEditingController messageTextEditingController = TextEditingController();
   DatabaseMethods databaseMethods = DatabaseMethods();
-  MyController controller = MyController();
+
   final ScrollController _scrollController = ScrollController();
   Stream? chatMessageStream;
 
@@ -67,23 +67,28 @@ class _ConversationScreenState extends State<ConversationScreen> {
         if (snapshot.hasError) {
           return const Text('Something went wrong');
         }
-
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Text("Loading");
         }
-
         return ListView(
           controller: _scrollController,
           shrinkWrap: true,
           children: snapshot.data!.docs.map((DocumentSnapshot document) {
             Map<String, dynamic> data =
                 document.data()! as Map<String, dynamic>;
-            Timer(
-                const Duration(milliseconds: 1),
-                () => _scrollController
-                    .jumpTo(_scrollController.position.maxScrollExtent));
+
             //have to play sound here
-            controller.changeName(data['message']);
+            Timer(const Duration(milliseconds: 1), () {
+              _scrollController
+                  .jumpTo(_scrollController.position.maxScrollExtent);
+            });
+
+            int millis = int.parse(data["time"]);
+            var dt = DateTime.fromMillisecondsSinceEpoch(millis);
+            var d12 = DateFormat('MM/dd/yyyy, hh:mm a')
+                .format(dt); // 12/31/2000, 10:00 PM
+            print(
+                "-given string---${DateTime.fromMillisecondsSinceEpoch(millis).runtimeType}-----${data["time"].runtimeType}-------time displaying--$d12---------- --------${data["time"]}---------------------------time----");
             return Padding(
                 padding: const EdgeInsets.all(6.0),
                 child: data["sendBy"] != Constants.myName
@@ -117,7 +122,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                     color: Colors.white, fontSize: 16),
                               ),
                               Text(
-                                data['time'].toString(),
+                                d12.toString().substring(1, 4),
                                 style: const TextStyle(
                                     color: Colors.grey, fontSize: 10),
                               ),
@@ -148,6 +153,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                             ],
                           ),
                           child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Text(
                                 data['message'],
@@ -155,9 +161,9 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                     color: Colors.white, fontSize: 16),
                               ),
                               Text(
-                                data['time'].toString(),
+                                d12.toString().substring(11, 20),
                                 style: const TextStyle(
-                                    color: Colors.grey, fontSize: 10),
+                                    color: Colors.grey, fontSize: 8),
                               ),
                             ],
                           ),
@@ -320,19 +326,5 @@ class _ConversationScreenState extends State<ConversationScreen> {
         ],
       ),
     );
-  }
-}
-
-class MyController extends GetxController {
-  var lastmes = "".obs;
-  changeName(String s) {
-    FirebaseFirestore.instance
-        .collection("/ChatRoom/$s/chats")
-        .orderBy("time", descending: true)
-        .snapshots()
-        .listen((event) {
-      lastmes = RxString(event.docs[0]["message"].toString());
-    });
-    lastmes = lastmes;
   }
 }
