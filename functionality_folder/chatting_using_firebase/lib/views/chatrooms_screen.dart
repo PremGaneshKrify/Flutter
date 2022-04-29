@@ -217,7 +217,9 @@ class _MessageTileState extends State<MessageTile> {
         .orderBy("time", descending: true)
         .snapshots()
         .listen((event) {
-      lastmessage = event.docs[0]["message"];
+      setState(() {
+        lastmessage = event.docs[0]["message"];
+      });
     });
 
     return GestureDetector(
