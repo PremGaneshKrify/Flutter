@@ -83,7 +83,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                   .jumpTo(_scrollController.position.maxScrollExtent);
             });
 
-            int millis = int.parse(data["time"]);
+            int millis = data["time"];
             var dt = DateTime.fromMillisecondsSinceEpoch(millis);
             var d12 = DateFormat('MM/dd/yyyy, hh:mm a')
                 .format(dt); // 12/31/2000, 10:00 PM
@@ -97,15 +97,16 @@ class _ConversationScreenState extends State<ConversationScreen> {
                         child: Container(
                           constraints: BoxConstraints(
                             maxWidth: MediaQuery.of(context).size.width * 0.80,
+                            minWidth: MediaQuery.of(context).size.width * 0.10,
                           ),
                           padding: const EdgeInsets.all(10),
                           margin: const EdgeInsets.symmetric(vertical: 1),
                           decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 18, 98, 21),
+                            color: const Color.fromARGB(255, 6, 88, 8),
                             borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(40),
-                                topRight: Radius.circular(40),
-                                bottomRight: Radius.circular(40)),
+                                topLeft: Radius.circular(30),
+                                topRight: Radius.circular(30),
+                                bottomRight: Radius.circular(30)),
                             boxShadow: [
                               BoxShadow(
                                 color: Colors.grey.withOpacity(0.5),
@@ -115,14 +116,18 @@ class _ConversationScreenState extends State<ConversationScreen> {
                             ],
                           ),
                           child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                data['message'],
-                                style: const TextStyle(
-                                    color: Colors.white, fontSize: 16),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 20),
+                                child: Text(
+                                  data['message'],
+                                  style: const TextStyle(
+                                      color: Colors.white, fontSize: 16),
+                                ),
                               ),
                               Text(
-                                d12.toString().substring(1, 4),
+                                d12.toString().substring(11, 20),
                                 style: const TextStyle(
                                     color: Colors.grey, fontSize: 10),
                               ),
@@ -135,6 +140,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                         child: Container(
                           constraints: BoxConstraints(
                             maxWidth: MediaQuery.of(context).size.width * 0.80,
+                            minWidth: MediaQuery.of(context).size.width * 0.20,
                           ),
                           padding: const EdgeInsets.all(10),
                           margin: const EdgeInsets.symmetric(vertical: 1),
@@ -152,20 +158,25 @@ class _ConversationScreenState extends State<ConversationScreen> {
                               ),
                             ],
                           ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Text(
-                                data['message'],
-                                style: const TextStyle(
-                                    color: Colors.white, fontSize: 16),
-                              ),
-                              Text(
-                                d12.toString().substring(11, 20),
-                                style: const TextStyle(
-                                    color: Colors.grey, fontSize: 8),
-                              ),
-                            ],
+                          child: Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(right: 20),
+                                  child: Text(
+                                    data['message'],
+                                    style: const TextStyle(
+                                        color: Colors.white, fontSize: 16),
+                                  ),
+                                ),
+                                Text(
+                                  d12.toString().substring(11, 20),
+                                  style: const TextStyle(
+                                      color: Colors.grey, fontSize: 8),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ));

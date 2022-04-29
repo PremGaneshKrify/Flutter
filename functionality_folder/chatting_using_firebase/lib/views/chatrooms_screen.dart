@@ -7,7 +7,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import '../helper/authenticate.dart';
 import 'conversation_screen.dart';
 import 'package:lottie/lottie.dart';
 
@@ -29,7 +28,7 @@ class _ChatRoomState extends State<ChatRoom> {
   AuthServices authServices = AuthServices();
   HelperFunctions helperFunctions = HelperFunctions();
   DatabaseMethods databaseMethods = DatabaseMethods();
-
+  bool logout = false;
   String? token;
   @override
   void initState() {
@@ -101,8 +100,9 @@ class _ChatRoomState extends State<ChatRoom> {
         ),
         backgroundColor: Colors.black,
         actions: [
-          GestureDetector(
+          InkWell(
             onTap: (() {
+              logout = true;
               authServices.signOut();
               authServices.googleSignOut();
               setState(() {
@@ -112,14 +112,28 @@ class _ChatRoomState extends State<ChatRoom> {
                 HelperFunctions.saveUserUIDSharedPreference('');
                 Constants.myName = '';
               });
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const Authenticate(),
-                ),
-              );
+
+              // Navigator.pushReplacement(
+              //   context,
+              //   MaterialPageRoute(
+              //     builder: (context) => const Authenticate(),
+              //   ),
+              // );
             }),
-            child: const Icon(Icons.exit_to_app),
+            child: logout == true
+                ? SizedBox(
+                    child: Lottie.asset("assets/images/logout2.json",
+                        height: 100, width: 100),
+                  )
+                : Row(
+                    children: const [
+                      Text("Logout"),
+                      Padding(
+                        padding: EdgeInsets.only(right: 10),
+                        child: Icon(Icons.exit_to_app),
+                      ),
+                    ],
+                  ),
           )
         ],
       ),
@@ -145,7 +159,7 @@ class _ChatRoomState extends State<ChatRoom> {
           child: Stack(
         children: [
           Container(
-              color: Colors.white,
+              color: Colors.transparent,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
@@ -190,9 +204,7 @@ class _MessageTileState extends State<MessageTile> {
         .orderBy("time", descending: true)
         .snapshots()
         .listen((event) {
-      
-        lastmessage = event.docs[0]["message"];
-    
+      lastmessage = event.docs[0]["message"];
     });
 
     return GestureDetector(
