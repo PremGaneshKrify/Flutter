@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import '../helper/authenticate.dart';
 import 'conversation_screen.dart';
 import 'package:lottie/lottie.dart';
+import 'package:get/get.dart';
 
 class ChatRoom extends StatefulWidget {
   const ChatRoom({
@@ -33,31 +34,17 @@ class _ChatRoomState extends State<ChatRoom> {
   String? token;
   @override
   void initState() {
-    // FirebaseFirestore.instance
-    //     .collection("/ChatRoom/$i/chats")
-    //     .orderBy("time", descending: true)
-    //     .snapshots()
-    //     .listen((event) {
-    //   setState(() {
-    //     lastmessage = event.docs[0]["message"];
-    //  });
-    //  });
-
     getUserInfo();
     storeNotificationToken();
+    chatRoomList();
     super.initState();
   }
 
   chatRoomList() {
+    MyController controller = MyController();
     final Stream<QuerySnapshot> chatRoomStream = FirebaseFirestore.instance
         .collection("ChatRoom")
         .where("users", arrayContains: Constants.myName)
-        .snapshots();
-    final Stream<QuerySnapshot> lastmessageSteam = FirebaseFirestore.instance
-        .collection('ChatRoom')
-        .doc()
-        .collection("chats")
-        .orderBy("time", descending: false)
         .snapshots();
 
     return StreamBuilder<QuerySnapshot>(
@@ -73,36 +60,19 @@ class _ChatRoomState extends State<ChatRoom> {
             children: snapshot.data!.docs.map((DocumentSnapshot document) {
               Map<String, dynamic> data =
                   document.data()! as Map<String, dynamic>;
-
-              i = data["chatRoomId"];
-
-              print("$i   ------------------${list + 1}---");
-              getlastmes(data["chatRoomId"]);
+              controller.changeName(data["chatRoomId"]);
               return MessageTile(
                 userName: data["chatRoomId"]
                     .toString()
                     .replaceAll("-", "")
                     .replaceAll(Constants.myName, ''),
-                chatRoomID: data["chatRoomId"], lastmessage: '',
+                chatRoomID: data["chatRoomId"],
+                lastmessage: '',
                 chatroomid: data["chatRoomId"],
-                // lastmessage:
-                //     lastmessage == null ? 'getting null' : lastmessage!,
               );
             }).toList(),
           );
         });
-  }
-
-  getlastmes(chatid) {
-    FirebaseFirestore.instance
-        .collection("/ChatRoom/$chatid/chats")
-        .orderBy("time", descending: true)
-        .snapshots()
-        .listen((event) {
-      setState(() {
-        lastmessage = event.docs[0]["message"];
-      });
-    });
   }
 
   storeNotificationToken() async {
@@ -123,9 +93,6 @@ class _ChatRoomState extends State<ChatRoom> {
 
   @override
   Widget build(BuildContext context) {
-    //JustForFun();
-
-    // databaseMethods.getLastMessage('Krify Soft-ganesh');
     var name = Constants.myName.toUpperCase().toString();
     return Scaffold(
       appBar: AppBar(
@@ -180,12 +147,13 @@ class _ChatRoomState extends State<ChatRoom> {
           child: Stack(
         children: [
           Container(
+              color: Colors.white,
               child: Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Lottie.asset("assets/images/77862-chatting.json"),
-            ],
-          )),
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Lottie.asset("assets/images/77862-chatting.json"),
+                ],
+              )),
           chatRoomList(),
         ],
       )),
@@ -210,24 +178,40 @@ class MessageTile extends StatefulWidget {
   State<MessageTile> createState() => _MessageTileState();
 }
 
+// class MyController extends GetxController {
+//   var lastmes = "".obs;
+//   changeName(String s) {
+//     FirebaseFirestore.instance
+//         .collection("/ChatRoom/$s/chats")
+//         .orderBy("time", descending: true)
+//         .snapshots()
+//         .listen((event) {
+//       lastmes = RxString(event.docs[0]["message"].toString());
+//     });
+//     lastmes = lastmes;
+//   }
+// }
+
 class _MessageTileState extends State<MessageTile> {
+  MyController controller = MyController();
   DatabaseMethods databaseMethods = DatabaseMethods();
   late QuerySnapshot searchsnapshot;
   String? searchUsertoken;
-  var lastmessage;
+  var lastmessage = ''.obs;
 
   @override
   Widget build(BuildContext context) {
-    print("reecviced data ${widget.userName}");
-    FirebaseFirestore.instance
-        .collection("/ChatRoom/${widget.chatRoomID}/chats")
-        .orderBy("time", descending: true)
-        .snapshots()
-        .listen((event) {
-      setState(() {
-        lastmessage = event.docs[0]["message"];
-      });
-    });
+    // print("reecviced data ${widget.userName}");
+    // FirebaseFirestore.instance
+    //     .collection("/ChatRoom/${widget.chatRoomID}/chats")
+    //     .orderBy("time", descending: true)
+    //     .snapshots()
+    //     .listen((event) {
+    //   lastmessage = RxString(event.docs[0]["message"].obs);
+    // setState(() {
+    //   lastmessage = event.docs[0]["message"];
+    // });
+    // });
 
     return GestureDetector(
       onTap: (() async {
@@ -236,9 +220,8 @@ class _MessageTileState extends State<MessageTile> {
             searchsnapshot = value;
           });
           searchsnapshot = value;
-          setState(() {
-            searchUsertoken = searchsnapshot.docs[0]["token"];
-          });
+
+          searchUsertoken = searchsnapshot.docs[0]["token"];
         });
         Navigator.push(
           context,
@@ -254,7 +237,7 @@ class _MessageTileState extends State<MessageTile> {
       child: Padding(
         padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
         child: Container(
-          color: Colors.transparent,
+          // color: Colors.white,
           child: Center(
               child: Row(
             children: [
@@ -262,7 +245,7 @@ class _MessageTileState extends State<MessageTile> {
                 height: 50,
                 width: 50,
                 decoration: BoxDecoration(
-                    color: Colors.white,
+                    color: Colors.grey,
                     borderRadius: BorderRadius.circular(50)),
                 child: Center(
                   child: Text(
@@ -287,11 +270,14 @@ class _MessageTileState extends State<MessageTile> {
                   Container(
                     color: Colors.transparent,
                     width: MediaQuery.of(context).size.width * 0.7,
-                    child: Text(
-                      lastmessage.toString(),
-                      //   'hai',
-                      style: const TextStyle(fontSize: 16),
-                    ),
+                    child: Text('${controller.lastmes}'),
+                    // Obx(() => Text("$lastmessage")),
+
+                    // Text(
+                    //   lastmessage.toString(),
+                    //   //   'hai',
+                    //   style: const TextStyle(fontSize: 16),
+                    // ),
                   ),
                 ],
               )

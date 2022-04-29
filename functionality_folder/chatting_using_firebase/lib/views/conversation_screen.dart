@@ -6,6 +6,7 @@ import 'package:chatting_using_firebase/services/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:lottie/lottie.dart';
 import '../helper/helperfunctions.dart';
@@ -29,8 +30,10 @@ class ConversationScreen extends StatefulWidget {
 class _ConversationScreenState extends State<ConversationScreen> {
   TextEditingController messageTextEditingController = TextEditingController();
   DatabaseMethods databaseMethods = DatabaseMethods();
-  Stream? chatMessageStream;
+  MyController controller = MyController();
   final ScrollController _scrollController = ScrollController();
+  Stream? chatMessageStream;
+
   String? token;
   String? currentUsertoken;
   bool sendbutton = false;
@@ -80,6 +83,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                 () => _scrollController
                     .jumpTo(_scrollController.position.maxScrollExtent));
             //have to play sound here
+            controller.changeName(data['message']);
             return Padding(
                 padding: const EdgeInsets.all(6.0),
                 child: data["sendBy"] != Constants.myName
@@ -316,5 +320,19 @@ class _ConversationScreenState extends State<ConversationScreen> {
         ],
       ),
     );
+  }
+}
+
+class MyController extends GetxController {
+  var lastmes = "".obs;
+  changeName(String s) {
+    FirebaseFirestore.instance
+        .collection("/ChatRoom/$s/chats")
+        .orderBy("time", descending: true)
+        .snapshots()
+        .listen((event) {
+      lastmes = RxString(event.docs[0]["message"].toString());
+    });
+    lastmes = lastmes;
   }
 }
