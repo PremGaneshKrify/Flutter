@@ -24,6 +24,7 @@ class _ChatRoomState extends State<ChatRoom> {
   String? currentusertoken;
   String? lastmessage;
   var i;
+  var list = 0;
   String? user;
   AuthServices authServices = AuthServices();
   HelperFunctions helperFunctions = HelperFunctions();
@@ -74,7 +75,8 @@ class _ChatRoomState extends State<ChatRoom> {
                   document.data()! as Map<String, dynamic>;
 
               i = data["chatRoomId"];
-              print(i);
+
+              print("$i   ------------------${list + 1}---");
               getlastmes(data["chatRoomId"]);
               return MessageTile(
                 userName: data["chatRoomId"]
@@ -96,9 +98,9 @@ class _ChatRoomState extends State<ChatRoom> {
         .orderBy("time", descending: true)
         .snapshots()
         .listen((event) {
-      // setState(() {
-      lastmessage = event.docs[0]["message"];
-      // });
+      setState(() {
+        lastmessage = event.docs[0]["message"];
+      });
     });
   }
 
