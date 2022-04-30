@@ -85,8 +85,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         isLoading = false;
                       });
                     },
-                    child: const Text(
-                        "sdfksjflskfjlskfjslkfajsdlfksdjflsroiweruiruwoir"),
+                    child: const Text("close"),
                   ),
                 ],
               ),
