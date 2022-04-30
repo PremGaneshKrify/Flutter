@@ -85,29 +85,11 @@ class _SignInScreenState extends State<SignInScreen> {
                         isLoading = false;
                       });
                     },
-                    child: const Text("sdfsfsdfsdfdsfs"),
+                    child: const Text("close"),
                   ),
                 ],
               ),
             );
-            // showDialog(
-            //   context: context,
-            //   builder: (ctx) => AlertDialog(
-            //     title: const Center(child: Text("Alert")),
-            //     content: Text(value.toString()),
-            //     actions: <Widget>[
-            //       FlatButton(
-            //         onPressed: () {
-            //           Navigator.of(ctx).pop();
-            //           setState(() {
-            //             isLoading = false;
-            //           });
-            //         },
-            //         child: const Text("close"),
-            //       ),
-            //     ],
-            //   ),
-            // );
           }
         }
 
