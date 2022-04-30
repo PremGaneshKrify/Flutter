@@ -25,6 +25,15 @@ class DatabaseMethods {
       log(e.toString());
     });
   }
+  lastmessageupload(userMap, userUID) {
+    return FirebaseFirestore.instance
+        .collection('users')
+        .doc("$userUID")
+        .set(userMap)
+        .catchError((e) {
+      log(e.toString());
+    });
+  }
 
   createChatRoom(String chatRoomId, chatRoomMap) {
     FirebaseFirestore.instance

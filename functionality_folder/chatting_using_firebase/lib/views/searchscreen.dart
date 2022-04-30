@@ -27,14 +27,13 @@ class _SearchscreenState extends State<Searchscreen> {
       setState(() {
         searchsnapshot = value;
         searchResult = true;
-      });
-      searchsnapshot = value;
-
-      setState(() {
         searchUsertoken = searchsnapshot.docs.isNotEmpty
             ? searchsnapshot.docs[0]["token"]
             : null;
       });
+      searchsnapshot = value;
+
+      //  setState(() {});
     });
   }
 
@@ -118,8 +117,8 @@ class _SearchscreenState extends State<Searchscreen> {
                     primary: Colors.black, // background
                   ),
                   onPressed: () {
-                    print(
-                        "sending user name to create chat room search result $searchUserName");
+                    // print(
+                    //     "sending user name to create chat room search result $searchUserName");
                     createChatroomAndStartConversation(searchUserName);
                   },
                   child: const Text(

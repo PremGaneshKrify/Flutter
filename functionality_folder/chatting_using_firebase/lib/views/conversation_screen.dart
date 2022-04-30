@@ -83,12 +83,10 @@ class _ConversationScreenState extends State<ConversationScreen> {
                   .jumpTo(_scrollController.position.maxScrollExtent);
             });
 
-            int millis = data["time"];
+            int millis = int.parse(data["time"].toString());
             var dt = DateTime.fromMillisecondsSinceEpoch(millis);
             var d12 = DateFormat('MM/dd/yyyy, hh:mm a')
                 .format(dt); // 12/31/2000, 10:00 PM
-            print(
-                "-given string---${DateTime.fromMillisecondsSinceEpoch(millis).runtimeType}-----${data["time"].runtimeType}-------time displaying--$d12---------- --------${data["time"]}---------------------------time----");
             return Padding(
                 padding: const EdgeInsets.all(6.0),
                 child: data["sendBy"] != Constants.myName
