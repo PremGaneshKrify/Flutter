@@ -55,7 +55,9 @@ class _SearchscreenState extends State<Searchscreen> {
     String chatRoomId = getChatRoomId(searchUserName, Constants.myName);
     Map<String, dynamic> chatRoomMap = {
       "users": users,
-      "chatRoomId": chatRoomId
+      "chatRoomId": chatRoomId,
+      "time": DateTime.now().millisecondsSinceEpoch,
+      "lastmessage": '',
     };
     log("This is searchName  $searchUserName  this is currentuser name ${Constants.myName} chatroom id $chatRoomId");
     databaseMethods.createChatRoom(chatRoomId, chatRoomMap);

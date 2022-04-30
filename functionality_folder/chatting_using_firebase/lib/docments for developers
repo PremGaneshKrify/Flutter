@@ -80,3 +80,29 @@ UserCredential(
 
 FirebaseFirestore.instance.colection("Collection Name/document name/collection").doc().collecion().doc.get();
 //--------------------------------------------GMAIL SIGNIN DATA ----------------------------------------------------//
+
+
+
+func readTimestamp(timestamp: Int) {
+    let now = Date()
+    let dateFormatter = DateFormatter()
+    let date = Date(timeIntervalSince1970: Double(timestamp))
+    let components = Set<Calendar.Component>([.second, .minute, .hour, .day, .weekOfMonth])
+    let diff = Calendar.current.dateComponents(components, from: date, to: now)
+    var timeText = ""
+
+    dateFormatter.locale = .current
+    dateFormatter.dateFormat = "HH:mm a"
+
+    if diff.second! <= 0 || diff.second! > 0 && diff.minute! == 0 || diff.minute! > 0 && diff.hour! == 0 || diff.hour! > 0 && diff.day! == 0 {
+        timeText = dateFormatter.string(from: date)
+    }
+    if diff.day! > 0 && diff.weekOfMonth! == 0 {
+        timeText = (diff.day == 1) ? "\(diff.day!) DAY AGO" : "\(diff.day!) DAYS AGO"
+    }
+    if diff.weekOfMonth! > 0 {
+        timeText = (diff.weekOfMonth == 1) ? "\(diff.weekOfMonth!) WEEK AGO" : "\(diff.weekOfMonth!) WEEKS AGO"
+    }
+
+    return timeText
+}

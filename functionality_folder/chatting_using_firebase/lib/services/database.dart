@@ -35,6 +35,16 @@ class DatabaseMethods {
     });
   }
 
+  uploadtime(timemap, userUID) {
+    return FirebaseFirestore.instance
+        .collection('ChatRoom')
+        .doc("$userUID")
+        .update(timemap)
+        .catchError((e) {
+      log(e.toString());
+    });
+  }
+
   createChatRoom(String chatRoomId, chatRoomMap) {
     FirebaseFirestore.instance
         .collection("ChatRoom")
@@ -71,7 +81,4 @@ class DatabaseMethods {
         .where("users", arrayContains: userName)
         .snapshots();
   }
-
- 
- 
 }

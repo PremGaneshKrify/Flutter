@@ -1,3 +1,4 @@
+import 'package:chatting_using_firebase/helper/authenticate.dart';
 import 'package:chatting_using_firebase/helper/constants.dart';
 import 'package:chatting_using_firebase/helper/helperfunctions.dart';
 import 'package:chatting_using_firebase/services/auth.dart';
@@ -7,6 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'conversation_screen.dart';
 import 'package:lottie/lottie.dart';
 
@@ -41,6 +43,7 @@ class _ChatRoomState extends State<ChatRoom> {
   chatRoomList() {
     final Stream<QuerySnapshot> chatRoomStream = FirebaseFirestore.instance
         .collection("ChatRoom")
+        //  .orderBy("time", descending: true)
         .where("users", arrayContains: Constants.myName)
         .snapshots();
 
@@ -57,14 +60,14 @@ class _ChatRoomState extends State<ChatRoom> {
             children: snapshot.data!.docs.map((DocumentSnapshot document) {
               Map<String, dynamic> data =
                   document.data()! as Map<String, dynamic>;
-
               return MessageTile(
                 userName: data["chatRoomId"]
                     .toString()
                     .replaceAll("-", "")
                     .replaceAll(Constants.myName, ''),
                 chatRoomID: data["chatRoomId"],
-                lastmessage: '',
+                time: data["time"],
+                lastmessage: data["lastmessage"],
                 chatroomid: data["chatRoomId"],
               );
             }).toList(),
@@ -101,7 +104,7 @@ class _ChatRoomState extends State<ChatRoom> {
         backgroundColor: Colors.black,
         actions: [
           InkWell(
-            onTap: (() {
+            onTap: (() async {
               logout = true;
               authServices.signOut();
               authServices.googleSignOut();
@@ -112,13 +115,13 @@ class _ChatRoomState extends State<ChatRoom> {
                 HelperFunctions.saveUserUIDSharedPreference('');
                 Constants.myName = '';
               });
-
-              // Navigator.pushReplacement(
-              //   context,
-              //   MaterialPageRoute(
-              //     builder: (context) => const Authenticate(),
-              //   ),
-              // );
+              await Future.delayed(const Duration(milliseconds: 2000));
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const Authenticate(),
+                ),
+              );
             }),
             child: logout == true
                 ? SizedBox(
@@ -178,8 +181,11 @@ class MessageTile extends StatefulWidget {
   final String chatRoomID;
   final String lastmessage;
   final String? chatroomid;
-  const MessageTile(
+
+  var time;
+  MessageTile(
       {Key? key,
+      required this.time,
       required this.userName,
       required this.chatRoomID,
       required this.lastmessage,
@@ -194,18 +200,40 @@ class _MessageTileState extends State<MessageTile> {
   DatabaseMethods databaseMethods = DatabaseMethods();
   late QuerySnapshot searchsnapshot;
   String? searchUsertoken;
-  var lastmessage = '';
-
   @override
   Widget build(BuildContext context) {
-    print("reecviced data ${widget.userName}");
-    FirebaseFirestore.instance
-        .collection("/ChatRoom/${widget.chatRoomID}/chats")
-        .orderBy("time", descending: true)
-        .snapshots()
-        .listen((event) {
-      lastmessage = event.docs[0]["message"];
-    });
+    String readTimestamp(int timestamp) {
+      var now = DateTime.now();
+      var format = DateFormat('HH:mm a');
+      var date = DateTime.fromMillisecondsSinceEpoch(timestamp);
+      var diff = now.difference(date);
+      int millis = widget.time;
+      var dt = DateTime.fromMillisecondsSinceEpoch(millis);
+      var d12 = DateFormat('hh:mm a').format(dt);
+      var time = '';
+
+      if (diff.inSeconds <= 0 ||
+          diff.inSeconds > 0 && diff.inMinutes == 0 ||
+          diff.inMinutes > 0 && diff.inHours == 0 ||
+          diff.inHours > 0 && diff.inDays == 0) {
+        //  time = format.format(date);
+        time = d12;
+      } else if (diff.inDays > 0 && diff.inDays < 7) {
+        if (diff.inDays == 1) {
+          time = diff.inDays.toString() + ' DAY AGO';
+        } else {
+          time = diff.inDays.toString() + ' DAYS AGO';
+        }
+      } else {
+        if (diff.inDays == 7) {
+          time = (diff.inDays / 7).floor().toString() + ' WEEK AGO';
+        } else {
+          time = (diff.inDays / 7).floor().toString() + ' WEEKS AGO';
+        }
+      }
+
+      return time;
+    }
 
     return GestureDetector(
       onTap: (() async {
@@ -229,51 +257,55 @@ class _MessageTileState extends State<MessageTile> {
         );
       }),
       child: Padding(
-        padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
-        child: Container(
-          // color: Colors.white,
-          child: Center(
-              child: Row(
-            children: [
-              Container(
-                height: 50,
-                width: 50,
-                decoration: BoxDecoration(
-                    color: Colors.grey,
-                    borderRadius: BorderRadius.circular(50)),
-                child: Center(
-                  child: Text(
-                    widget.userName.substring(0, 1).toUpperCase(),
+        padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
+        child: Center(
+            child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  height: 50,
+                  width: 50,
+                  decoration: BoxDecoration(
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.circular(50)),
+                  child: Center(
+                    child: Text(
+                      widget.userName.substring(0, 1).toUpperCase(),
+                    ),
                   ),
                 ),
               ),
               SizedBox(
-                width: MediaQuery.of(context).size.width * 0.03,
+                width: MediaQuery.of(context).size.width * 0.01,
               ),
               Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    color: Colors.transparent,
-                    width: MediaQuery.of(context).size.width * 0.7,
+                  SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.31,
                     child: Text(
                       widget.userName,
                       style: const TextStyle(
                           fontWeight: FontWeight.bold, fontSize: 20),
                     ),
                   ),
-                  Container(
-                    color: Colors.transparent,
-                    width: MediaQuery.of(context).size.width * 0.7,
-                    child: Text(
-                      lastmessage.toString(),
-                      style: const TextStyle(fontSize: 16),
-                    ),
+                  Text(
+                    widget.lastmessage,
+                    style: const TextStyle(fontSize: 16),
                   ),
                 ],
-              )
-            ],
-          )),
-        ),
+              ),
+            ]),
+            Text(
+              //d12,
+              readTimestamp(widget.time),
+              style: const TextStyle(fontSize: 16),
+            ),
+          ],
+        )),
       ),
     );
   }
