@@ -267,6 +267,15 @@ class _ConversationScreenState extends State<ConversationScreen> {
         "time": DateTime.now().millisecondsSinceEpoch
       };
       databaseMethods.addConversationMessages(widget.chatRoomId, messageMap);
+
+      Map<String, dynamic> timemap = {
+        "time": DateTime.now().millisecondsSinceEpoch,
+        "lastmessage": messageTextEditingController.text,
+      };
+      databaseMethods.uploadtime(
+        timemap,
+        widget.chatRoomId,
+      );
     }
   }
 
