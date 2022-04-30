@@ -41,38 +41,83 @@ class _ChatRoomState extends State<ChatRoom> {
   }
 
   chatRoomList() {
+    // FirebaseFirestore.instance
+    //     .collection("ChatRoom")
+    //     .orderBy("time", descending: true)
+    //     .snapshots()
+    //     .listen((event) {
+    //   final documents = event.docs;
+    //   print(documents);
+    //   for (var i in documents) {
+    //     print(i.id);
+
+    //   }
+    // });
+
+    // final Stream<QuerySnapshot> chatRoomStream1 = FirebaseFirestore.instance
+    //     .collection("ChatRoom")
+    //     .orderBy("time", descending: true)
+    //     .where("users", arrayContains: Constants.myName)
+    //     .snapshots();
+    List data123456 = [];
+    FirebaseFirestore.instance
+        .collection("ChatRoom")
+        .orderBy("time", descending: true)
+        .where("users", arrayContains: Constants.myName)
+        .snapshots()
+        .listen((event) {
+      data123456 = event.docs;
+      for (var i in event.docs) {
+        //data123456.add(i);
+        //   print(
+        //       "${i.id}..................................................flutter");
+      }
+    });
+
     final Stream<QuerySnapshot> chatRoomStream = FirebaseFirestore.instance
         .collection("ChatRoom")
-        //  .orderBy("time", descending: true)
         .where("users", arrayContains: Constants.myName)
         .snapshots();
 
-    return StreamBuilder<QuerySnapshot>(
-        stream: chatRoomStream,
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.hasError) {
-            return const Text('Something went wrong');
-          }
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Text("Loading");
-          }
-          return ListView(
-            children: snapshot.data!.docs.map((DocumentSnapshot document) {
-              Map<String, dynamic> data =
-                  document.data()! as Map<String, dynamic>;
-              return MessageTile(
-                userName: data["chatRoomId"]
-                    .toString()
-                    .replaceAll("-", "")
-                    .replaceAll(Constants.myName, ''),
-                chatRoomID: data["chatRoomId"],
-                time: data["time"],
-                lastmessage: data["lastmessage"],
-                chatroomid: data["chatRoomId"],
-              );
-            }).toList(),
+    // return StreamBuilder<QuerySnapshot>(
+    //     stream: chatRoomStream,
+    //     builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+    //       if (snapshot.hasError) {
+    //         return const Text('Something went wrong');
+    //       }
+    //       if (snapshot.connectionState == ConnectionState.waiting) {
+    //         return const Text("Loading");
+    //       }
+    return ListView.builder(
+        itemCount: data123456.length,
+        itemBuilder: (BuildContext context, int index) {
+          return MessageTile(
+            userName: data123456[index]["chatRoomId"]
+                .toString()
+                .replaceAll("-", "")
+                .replaceAll(Constants.myName, ''),
+            chatRoomID: data123456[index]["chatRoomId"],
+            time: data123456[index]["time"],
+            lastmessage: data123456[index]["lastmessage"],
+            chatroomid: data123456[index]["chatRoomId"],
           );
         });
+    // return ListView(
+    //   children: snapshot.data!.docs.map((DocumentSnapshot document) {
+    //     Map<String, dynamic> data =
+    //         document.data()! as Map<String, dynamic>;
+    //     return MessageTile(
+    //       userName: data["chatRoomId"] .toString()
+    //         .replaceAll("-", "")
+    //         .replaceAll(Constants.myName, ''),
+    //       chatRoomID: data["chatRoomId"],
+    //       time: data["time"],
+    //       lastmessage: data["lastmessage"],
+    //       chatroomid: data["chatRoomId"],
+    //     );
+    //   }).toList(),
+    // );
+    //  });
   }
 
   storeNotificationToken() async {
