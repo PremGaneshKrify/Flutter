@@ -239,13 +239,13 @@ class _SignInScreenState extends State<SignInScreen> {
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
-                                    Lottie.asset(
-                                      "assets/images/googleSignupLOGO.json",
-                                      height:
-                                          MediaQuery.of(context).size.width *
-                                              0.15,
-                                      width: MediaQuery.of(context).size.width *
-                                          0.15,
+                                    Padding(
+                                      padding: const EdgeInsets.all(8.0),
+                                      child: Image.asset(
+                                          "assets/images/GoogleLOGO.jpg"),
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
                                     ),
                                     const Text(
                                       "Sign up with Google",

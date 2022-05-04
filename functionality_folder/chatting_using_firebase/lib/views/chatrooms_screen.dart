@@ -67,9 +67,13 @@ class _ChatRoomState extends State<ChatRoom> {
                       .replaceAll(Constants.myName, ''),
                   chatRoomID: data123456[index]["chatRoomId"],
                   time: data123456[index]["time"],
-                  lastmessage: data123456[index]["users"].toString(),
+                  lastmessage: data123456[index]["lastmessage"],
                   chatroomid: data123456[index]["chatRoomId"],
-                  count: data123456[index][data123456[index]['users'][0].toString()],
+                  count: data123456[index][
+                      data123456[index]['users'][1].toString() ==
+                              Constants.myName
+                          ? data123456[index]['users'][0].toString()
+                          : data123456[index]['users'][1].toString()],
                 );
               });
         });
@@ -105,38 +109,64 @@ class _ChatRoomState extends State<ChatRoom> {
         actions: [
           InkWell(
             onTap: (() async {
-              logout = true;
-              authServices.signOut();
-              authServices.googleSignOut();
-              setState(() {
-                HelperFunctions.saveUserLoggedInSharedPreference(false);
-                HelperFunctions.saveUserNameSharedPreference("");
-                HelperFunctions.saveUserEmailSharedPreference("");
-                HelperFunctions.saveUserUIDSharedPreference('');
-                Constants.myName = '';
-              });
-              await Future.delayed(const Duration(milliseconds: 2000));
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const Authenticate(),
+              showDialog(
+                barrierDismissible: false,
+                context: context,
+                builder: (ctx) => AlertDialog(
+                  title: const Center(child: Text("Alert")),
+                  content: const Text("ARE YOU SURE WANT TO LOGOUT"),
+                  actions: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        FlatButton(
+                          onPressed: () {
+                            Navigator.of(ctx).pop();
+                          },
+                          child: const Text("NO"),
+                        ),
+                        FlatButton(
+                          onPressed: () async {
+                            Navigator.of(ctx).pop();
+                            setState(() {
+                              authServices.signOut();
+                              authServices.googleSignOut();
+                              setState(() {
+                                HelperFunctions
+                                    .saveUserLoggedInSharedPreference(false);
+                                HelperFunctions.saveUserNameSharedPreference(
+                                    "");
+                                HelperFunctions.saveUserEmailSharedPreference(
+                                    "");
+                                HelperFunctions.saveUserUIDSharedPreference('');
+                                Constants.myName = '';
+                              });
+
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const Authenticate(),
+                                ),
+                              );
+                            });
+                          },
+                          child: const Text("YES"),
+                        ),
+                      ],
+                    )
+                  ],
                 ),
               );
             }),
-            child: logout == true
-                ? SizedBox(
-                    child: Lottie.asset("assets/images/logout2.json",
-                        height: 100, width: 100),
-                  )
-                : Row(
-                    children: const [
-                      Text("Logout"),
-                      Padding(
-                        padding: EdgeInsets.only(right: 10),
-                        child: Icon(Icons.exit_to_app),
-                      ),
-                    ],
-                  ),
+            child: Row(
+              children: const [
+                Text("Logout"),
+                Padding(
+                  padding: EdgeInsets.only(right: 10),
+                  child: Icon(Icons.exit_to_app),
+                ),
+              ],
+            ),
           )
         ],
       ),
@@ -161,14 +191,6 @@ class _ChatRoomState extends State<ChatRoom> {
       body: Container(
           child: Stack(
         children: [
-          Container(
-              color: Colors.transparent,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  Lottie.asset("assets/images/77862-chatting.json"),
-                ],
-              )),
           chatRoomList(),
         ],
       )),
@@ -205,6 +227,8 @@ class _MessageTileState extends State<MessageTile> {
   String? searchUsertoken;
   @override
   Widget build(BuildContext context) {
+    print(
+        "${widget.userName}-----------------------------------------------------------------------------search user name--------");
     String readTimestamp(int timestamp) {
       var now = DateTime.now();
       var format = DateFormat('HH:mm a');
@@ -240,6 +264,11 @@ class _MessageTileState extends State<MessageTile> {
 
     return GestureDetector(
       onTap: (() async {
+        Map<String, dynamic> timemap = {"read ": true, widget.userName: 0};
+        databaseMethods.uploadtime(
+          timemap,
+          widget.chatRoomID,
+        );
         await databaseMethods.getUserByUserName(widget.userName).then((value) {
           setState(() {
             searchsnapshot = value;
@@ -304,19 +333,21 @@ class _MessageTileState extends State<MessageTile> {
             ]),
             Column(
               children: [
-                Container(
-                  height: 20,
-                  width: 20,
-                  decoration: BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.circular(50)),
-                  child: Center(
-                    child: Text(
-                      widget.count.toString(),
-                      style: const TextStyle(fontSize: 10),
-                    ),
-                  ),
-                ),
+                widget.count == 0
+                    ? const SizedBox()
+                    : Container(
+                        height: 20,
+                        width: 20,
+                        decoration: BoxDecoration(
+                            color: Colors.grey,
+                            borderRadius: BorderRadius.circular(50)),
+                        child: Center(
+                          child: Text(
+                            widget.count.toString(),
+                            style: const TextStyle(fontSize: 10),
+                          ),
+                        ),
+                      ),
                 Text(
                   //d12,
                   readTimestamp(widget.time),

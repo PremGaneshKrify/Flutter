@@ -283,7 +283,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
       Map<String, dynamic> timemap = {
         "time": DateTime.now().millisecondsSinceEpoch,
         "lastmessage": messageTextEditingController.text.toString(),
-        widget.searchResultName: count,
+        Constants.myName: count,
         "read ": true,
       };
       databaseMethods.uploadtime(
