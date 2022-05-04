@@ -41,24 +41,6 @@ class _ChatRoomState extends State<ChatRoom> {
   }
 
   chatRoomList() {
-    // FirebaseFirestore.instance
-    //     .collection("ChatRoom")
-    //     .orderBy("time", descending: true)
-    //     .snapshots()
-    //     .listen((event) {
-    //   final documents = event.docs;
-    //   print(documents);
-    //   for (var i in documents) {
-    //     print(i.id);
-
-    //   }
-    // });
-
-    // final Stream<QuerySnapshot> chatRoomStream1 = FirebaseFirestore.instance
-    //     .collection("ChatRoom")
-    //     .orderBy("time", descending: true)
-    //     .where("users", arrayContains: Constants.myName)
-    //     .snapshots();
     List data123456 = [];
     FirebaseFirestore.instance
         .collection("ChatRoom")
@@ -67,57 +49,30 @@ class _ChatRoomState extends State<ChatRoom> {
         .snapshots()
         .listen((event) {
       data123456 = event.docs;
-      for (var i in event.docs) {
-        //data123456.add(i);
-        //   print(
-        //       "${i.id}..................................................flutter");
-      }
     });
-
-    final Stream<QuerySnapshot> chatRoomStream = FirebaseFirestore.instance
-        .collection("ChatRoom")
-        .where("users", arrayContains: Constants.myName)
-        .snapshots();
-
-    // return StreamBuilder<QuerySnapshot>(
-    //     stream: chatRoomStream,
-    //     builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-    //       if (snapshot.hasError) {
-    //         return const Text('Something went wrong');
-    //       }
-    //       if (snapshot.connectionState == ConnectionState.waiting) {
-    //         return const Text("Loading");
-    //       }
-    return ListView.builder(
-        itemCount: data123456.length,
-        itemBuilder: (BuildContext context, int index) {
-          return MessageTile(
-            userName: data123456[index]["chatRoomId"]
-                .toString()
-                .replaceAll("-", "")
-                .replaceAll(Constants.myName, ''),
-            chatRoomID: data123456[index]["chatRoomId"],
-            time: data123456[index]["time"],
-            lastmessage: data123456[index]["lastmessage"],
-            chatroomid: data123456[index]["chatRoomId"],
-          );
+    return StreamBuilder(
+        stream: FirebaseFirestore.instance
+            .collection("ChatRoom")
+            .orderBy("time", descending: true)
+            .where("users", arrayContains: Constants.myName)
+            .snapshots(),
+        builder: (context, snapchat) {
+          return ListView.builder(
+              itemCount: data123456.length,
+              itemBuilder: (BuildContext context, int index) {
+                return MessageTile(
+                  userName: data123456[index]["chatRoomId"]
+                      .toString()
+                      .replaceAll("-", "")
+                      .replaceAll(Constants.myName, ''),
+                  chatRoomID: data123456[index]["chatRoomId"],
+                  time: data123456[index]["time"],
+                  lastmessage: data123456[index]["users"].toString(),
+                  chatroomid: data123456[index]["chatRoomId"],
+                  count: data123456[index][data123456[index]['users'][0].toString()],
+                );
+              });
         });
-    // return ListView(
-    //   children: snapshot.data!.docs.map((DocumentSnapshot document) {
-    //     Map<String, dynamic> data =
-    //         document.data()! as Map<String, dynamic>;
-    //     return MessageTile(
-    //       userName: data["chatRoomId"] .toString()
-    //         .replaceAll("-", "")
-    //         .replaceAll(Constants.myName, ''),
-    //       chatRoomID: data["chatRoomId"],
-    //       time: data["time"],
-    //       lastmessage: data["lastmessage"],
-    //       chatroomid: data["chatRoomId"],
-    //     );
-    //   }).toList(),
-    // );
-    //  });
   }
 
   storeNotificationToken() async {
@@ -228,12 +183,15 @@ class MessageTile extends StatefulWidget {
   final String? chatroomid;
 
   var time;
+
+  var count;
   MessageTile(
       {Key? key,
       required this.time,
       required this.userName,
       required this.chatRoomID,
       required this.lastmessage,
+      required this.count,
       required this.chatroomid})
       : super(key: key);
 
@@ -308,21 +266,21 @@ class _MessageTileState extends State<MessageTile> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Row(children: [
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
-                  height: 50,
-                  width: 50,
-                  decoration: BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.circular(50)),
-                  child: Center(
-                    child: Text(
-                      widget.userName.substring(0, 1).toUpperCase(),
-                    ),
-                  ),
-                ),
-              ),
+              // Padding(
+              //   padding: const EdgeInsets.all(8.0),
+              //   child: Container(
+              //     height: 50,
+              //     width: 50,
+              //     decoration: BoxDecoration(
+              //         color: Colors.grey,
+              //         borderRadius: BorderRadius.circular(50)),
+              //     child: Center(
+              //       child: Text(
+              //         widget.userName.substring(0, 1).toUpperCase(),
+              //       ),
+              //     ),
+              //   ),
+              // ),
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.01,
               ),
@@ -344,10 +302,27 @@ class _MessageTileState extends State<MessageTile> {
                 ],
               ),
             ]),
-            Text(
-              //d12,
-              readTimestamp(widget.time),
-              style: const TextStyle(fontSize: 16),
+            Column(
+              children: [
+                Container(
+                  height: 20,
+                  width: 20,
+                  decoration: BoxDecoration(
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.circular(50)),
+                  child: Center(
+                    child: Text(
+                      widget.count.toString(),
+                      style: const TextStyle(fontSize: 10),
+                    ),
+                  ),
+                ),
+                Text(
+                  //d12,
+                  readTimestamp(widget.time),
+                  style: const TextStyle(fontSize: 16),
+                ),
+              ],
             ),
           ],
         )),

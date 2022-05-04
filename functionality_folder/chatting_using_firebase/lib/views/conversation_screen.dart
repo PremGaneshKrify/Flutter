@@ -37,19 +37,20 @@ class _ConversationScreenState extends State<ConversationScreen> {
   String? token;
   String? currentUsertoken;
   bool sendbutton = false;
-  var count = 0;
+  var count = 1;
   @override
   void initState() {
     HelperFunctions.saveSearchUserNameSharedPreference(widget.searchResultName);
     requestPermission();
     HelperFunctions.saveStopNotificationsSharedPreference(true);
-    count = 1;
+
     super.initState();
   }
 
   @override
   void dispose() {
     HelperFunctions.saveSearchUserNameSharedPreference('null');
+    count = 0;
     super.dispose();
   }
 
@@ -90,73 +91,85 @@ class _ConversationScreenState extends State<ConversationScreen> {
             return Padding(
                 padding: const EdgeInsets.all(6.0),
                 child: data["sendBy"] != Constants.myName
-                    ? Container(
-                        alignment: Alignment.topLeft,
+                    ? GestureDetector(
+                        onHorizontalDragEnd: ((details) {
+                          print(
+                              "-----------------------------------horizontal tap-------------");
+                        }),
                         child: Container(
-                          constraints: BoxConstraints(
-                            maxWidth: MediaQuery.of(context).size.width * 0.80,
-                            minWidth: MediaQuery.of(context).size.width * 0.10,
-                          ),
-                          padding: const EdgeInsets.all(10),
-                          margin: const EdgeInsets.symmetric(vertical: 1),
-                          decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 6, 88, 8),
-                            borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(30),
-                                topRight: Radius.circular(30),
-                                bottomRight: Radius.circular(30)),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.5),
-                                spreadRadius: 2,
-                                blurRadius: 5,
-                              ),
-                            ],
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.only(left: 20),
-                                child: Text(
-                                  data['message'],
-                                  style: const TextStyle(
-                                      color: Colors.white, fontSize: 16),
+                          alignment: Alignment.topLeft,
+                          child: Container(
+                            constraints: BoxConstraints(
+                              maxWidth:
+                                  MediaQuery.of(context).size.width * 0.80,
+                              minWidth:
+                                  MediaQuery.of(context).size.width * 0.10,
+                            ),
+                            padding: const EdgeInsets.all(10),
+                            margin: const EdgeInsets.symmetric(vertical: 1),
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(255, 0, 0, 0),
+                              borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(30),
+                                  topRight: Radius.circular(30),
+                                  bottomRight: Radius.circular(30)),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.5),
+                                  spreadRadius: 2,
+                                  blurRadius: 5,
                                 ),
-                              ),
-                              Text(
-                                d12.toString().substring(11, 20),
-                                style: const TextStyle(
-                                    color: Colors.grey, fontSize: 10),
-                              ),
-                            ],
+                              ],
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 20),
+                                  child: Text(
+                                    data['message'],
+                                    style: const TextStyle(
+                                        color: Colors.white, fontSize: 16),
+                                  ),
+                                ),
+                                Text(
+                                  d12.toString().substring(11, 20),
+                                  style: const TextStyle(
+                                      color: Colors.grey, fontSize: 10),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       )
-                    : Container(
-                        alignment: Alignment.topRight,
+                    : InkWell(
+                        onTap: (() => print(
+                            "---------------------------------ontap ontap------------")),
                         child: Container(
-                          constraints: BoxConstraints(
-                            maxWidth: MediaQuery.of(context).size.width * 0.80,
-                            minWidth: MediaQuery.of(context).size.width * 0.20,
-                          ),
-                          padding: const EdgeInsets.all(10),
-                          margin: const EdgeInsets.symmetric(vertical: 1),
-                          decoration: BoxDecoration(
-                            color: const Color.fromARGB(255, 52, 59, 66),
-                            borderRadius: const BorderRadius.only(
-                                topLeft: Radius.circular(40),
-                                topRight: Radius.circular(40),
-                                bottomLeft: Radius.circular(40)),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.5),
-                                spreadRadius: 2,
-                                blurRadius: 5,
-                              ),
-                            ],
-                          ),
-                          child: Expanded(
+                          alignment: Alignment.topRight,
+                          child: Container(
+                            constraints: BoxConstraints(
+                              maxWidth:
+                                  MediaQuery.of(context).size.width * 0.80,
+                              minWidth:
+                                  MediaQuery.of(context).size.width * 0.20,
+                            ),
+                            padding: const EdgeInsets.all(10),
+                            margin: const EdgeInsets.symmetric(vertical: 1),
+                            decoration: BoxDecoration(
+                              color: const Color.fromARGB(255, 255, 255, 255),
+                              borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(40),
+                                  topRight: Radius.circular(40),
+                                  bottomLeft: Radius.circular(40)),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.grey.withOpacity(0.5),
+                                  spreadRadius: 2,
+                                  blurRadius: 5,
+                                ),
+                              ],
+                            ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
@@ -165,7 +178,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
                                   child: Text(
                                     data['message'],
                                     style: const TextStyle(
-                                        color: Colors.white, fontSize: 16),
+                                        color: Colors.black, fontSize: 16),
                                   ),
                                 ),
                                 Text(
@@ -262,19 +275,23 @@ class _ConversationScreenState extends State<ConversationScreen> {
       Map<String, dynamic> messageMap = {
         "message": messageTextEditingController.text,
         "sendBy": Constants.myName,
-        "time": DateTime.now().millisecondsSinceEpoch
+        "time": DateTime.now().millisecondsSinceEpoch,
       };
       databaseMethods.addConversationMessages(widget.chatRoomId, messageMap);
-
+      if (Constants.myName == widget.searchResultName) {
+      } else {}
       Map<String, dynamic> timemap = {
         "time": DateTime.now().millisecondsSinceEpoch,
-        "lastmessage": messageTextEditingController.text,
+        "lastmessage": messageTextEditingController.text.toString(),
+        widget.searchResultName: count,
+        "read ": true,
       };
       databaseMethods.uploadtime(
         timemap,
         widget.chatRoomId,
       );
     }
+    count = count + 1;
   }
 
   @override
