@@ -30,11 +30,15 @@ class _SearchscreenState extends State<Searchscreen> {
         searchUsertoken = searchsnapshot.docs.isNotEmpty
             ? searchsnapshot.docs[0]["token"]
             : null;
+
       });
       searchsnapshot = value;
+    }  
+    
+    ); 
 
-      //  setState(() {});
-    });
+
+    
   }
 
   Widget searchListTile() {
