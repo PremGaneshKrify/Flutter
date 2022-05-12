@@ -284,6 +284,7 @@ class _ConversationScreenState extends State<ConversationScreen> {
         "time": DateTime.now().millisecondsSinceEpoch,
         "lastmessage": messageTextEditingController.text.toString(),
         Constants.myName: count,
+        widget.searchResultName: 0,
         "read ": true,
       };
       databaseMethods.uploadtime(
