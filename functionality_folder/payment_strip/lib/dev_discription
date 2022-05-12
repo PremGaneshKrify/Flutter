@@ -1,0 +1,230 @@
+premganesh@KSDKT-041:~/PremGanesh/Flutter Git Hub/Flutter/functionality_folder/payment_strip$ firebase init
+
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  /home/premganesh/PremGanesh/Flutter Git Hub/Flutter/functionality_folder/payment_strip
+
+? Which Firebase features do you want to set up for this directory? Press Space to select features, then Enter to confirm your choices. 
+
+Error: Must select at least one feature. Use SPACEBAR to select features, or specify a feature by running firebase init [feature_name]
+premganesh@KSDKT-041:~/PremGanesh/Flutter Git Hub/Flutter/functionality_folder/payment_strip$ firebase init
+
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  /home/premganesh/PremGanesh/Flutter Git Hub/Flutter/functionality_folder/payment_strip
+
+? Which Firebase features do you want to set up for this directory? Press Space to select features, then Enter to confirm your choices. Fun
+ctions: Configure a Cloud Functions directory and its files
+
+=== Project Setup
+
+First, let's associate this project directory with a Firebase project.
+You can create multiple project aliases by running firebase use --add, 
+but for now we'll just set up a default project.
+
+? Please select an option: Create a new project
+i  If you want to create a project in a Google Cloud organization or folder, please use "firebase projects:create" instead, and return to this command when you've created the project.
+? Please specify a unique project id (warning: cannot be modified afterward) [6-30 characters]:
+ strip_payment_prem
+? What would you like to call your project? (defaults to your project ID) payment_stripe
+✖ Creating Google Cloud Platform project
+
+Error: Failed to create project. See firebase-debug.log for more info.
+premganesh@KSDKT-041:~/PremGanesh/Flutter Git Hub/Flutter/functionality_folder/payment_strip$ firebase init
+
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  /home/premganesh/PremGanesh/Flutter Git Hub/Flutter/functionality_folder/payment_strip
+
+? Which Firebase features do you want to set up for this directory? Press Space to select features, then Enter to confirm your choices. Fun
+ctions: Configure a Cloud Functions directory and its files
+
+=== Project Setup
+
+First, let's associate this project directory with a Firebase project.
+You can create multiple project aliases by running firebase use --add, 
+but for now we'll just set up a default project.
+
+? Please select an option: Create a new project
+i  If you want to create a project in a Google Cloud organization or folder, please use "firebase projects:create" instead, and return to this command when you've created the project.
+? Please specify a unique project id (warning: cannot be modified afterward) [6-30 characters]:
+ payment_stripe
+? What would you like to call your project? (defaults to your project ID) paymentstripe
+✖ Creating Google Cloud Platform project
+
+Error: Failed to create project. See firebase-debug.log for more info.
+
+Having trouble? Try again or contact support with contents of firebase-debug.log
+premganesh@KSDKT-041:~/PremGanesh/Flutter Git Hub/Flutter/functionality_folder/payment_strip$ firebase init
+
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  /home/premganesh/PremGanesh/Flutter Git Hub/Flutter/functionality_folder/payment_strip
+
+? Which Firebase features do you want to set up for this directory? Press Space to select features, then Enter to confirm your choices. (Pr
+ess <space> to select, <a> to toggle all, <i> to invert selection, and <enter> to proceed)
+ ◯ Realtime Database: Configure a security rules file for Realtime Database and (optionally) provision default instance
+ ◯ Firestore: Configure security rules and indexes files for Firestore
+❯◯ Functions: Configure a Cloud Functions directory and its files
+ ◯ Hosting: Configure files for Firebase Hosting and (optionally) set up GitHub Action deploys
+ ◯ Hosting: Set up GitHub Action deploys
+ ◯ Storage: Configure a security rules file for Cloud Storage
+ ◯ Emulators: Set up local emulators for Firebase products
+(Move up and down to reveal more choices)
+premganesh@KSDKT-041:~/PremGanesh/Flutter Git Hub/Flutter/functionality_folder/payment_strip$ ^C
+premganesh@KSDKT-041:~/PremGanesh/Flutter Git Hub/Flutter/functionality_folder/payment_strip$ ^C
+premganesh@KSDKT-041:~/PremGanesh/Flutter Git Hub/Flutter/functionality_folder/payment_strip$ firebase init
+
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  /home/premganesh/PremGanesh/Flutter Git Hub/Flutter/functionality_folder/payment_strip
+
+? Which Firebase features do you want to set up for this directory? Press Space to select features, then Enter to confirm your choices. Fun
+ctions: Configure a Cloud Functions directory and its files
+
+=== Project Setup
+
+First, let's associate this project directory with a Firebase project.
+You can create multiple project aliases by running firebase use --add, 
+but for now we'll just set up a default project.
+
+? Please select an option: Create a new project
+i  If you want to create a project in a Google Cloud organization or folder, please use "firebase projects:create" instead, and return to this command when you've created the project.
+? Please specify a unique project id (warning: cannot be modified afterward) [6-30 characters]:
+ premganesh_payment_stripe
+? What would you like to call your project? (defaults to your project ID) premganesh_payment_stripe
+✖ Creating Google Cloud Platform project
+
+Error: Failed to create project. See firebase-debug.log for more info.
+premganesh@KSDKT-041:~/PremGanesh/Flutter Git Hub/Flutter/functionality_folder/payment_strip$ firebase init
+
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  /home/premganesh/PremGanesh/Flutter Git Hub/Flutter/functionality_folder/payment_strip
+
+? Which Firebase features do you want to set up for this directory? Press Space to select features, then Enter to confirm your choices. Fun
+ctions: Configure a Cloud Functions directory and its files
+
+=== Project Setup
+
+First, let's associate this project directory with a Firebase project.
+You can create multiple project aliases by running firebase use --add, 
+but for now we'll just set up a default project.
+
+? Please select an option: Create a new project
+i  If you want to create a project in a Google Cloud organization or folder, please use "firebase projects:create" instead, and return to this command when you've created the project.
+? Please specify a unique project id (warning: cannot be modified afterward) [6-30 characters]:
+ PremGaneshPaymentStripe
+? What would you like to call your project? (defaults to your project ID) PremGaneshPaymentStripe
+✖ Creating Google Cloud Platform project
+
+Error: Failed to create project. See firebase-debug.log for more info.
+premganesh@KSDKT-041:~/PremGanesh/Flutter Git Hub/Flutter/functionality_folder/payment_strip$ firebase-debug.log
+firebase-debug.log: command not found
+premganesh@KSDKT-041:~/PremGanesh/Flutter Git Hub/Flutter/functionality_folder/payment_strip$ firebase-debug.log
+firebase-debug.log: command not found
+premganesh@KSDKT-041:~/PremGanesh/Flutter Git Hub/Flutter/functionality_folder/payment_strip$ firebase init
+
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  /home/premganesh/PremGanesh/Flutter Git Hub/Flutter/functionality_folder/payment_strip
+
+? Which Firebase features do you want to set up for this directory? Press Space to select features, then Enter to confirm your choices. Fun
+ctions: Configure a Cloud Functions directory and its files
+
+=== Project Setup
+
+First, let's associate this project directory with a Firebase project.
+You can create multiple project aliases by running firebase use --add, 
+but for now we'll just set up a default project.
+
+? Please select an option: Use an existing project
+? Select a default Firebase project for this directory: strip-payment-gateway (Strip payment gateway)
+i  Using project strip-payment-gateway (Strip payment gateway)
+
+=== Functions Setup
+
+A functions directory will be created in your project with sample code
+pre-configured. Functions can be deployed with firebase deploy.
+
+
+            
+
+? What language would you like to use to write Cloud Functions? JavaScript
+? Do you want to use ESLint to catch probable bugs and enforce style? Yes
+✔  Wrote functions/package.json
+✔  Wrote functions/.eslintrc.js
+✔  Wrote functions/index.js
+✔  Wrote functions/.gitignore
+? Do you want to install dependencies with npm now? Yes
+
+> protobufjs@6.11.2 postinstall /home/premganesh/PremGanesh/Flutter Git Hub/Flutter/functionality_folder/payment_strip/functions/node_modules/protobufjs
+> node scripts/postinstall
+
+npm notice created a lockfile as package-lock.json. You should commit this file.
+npm WARN notsup Unsupported engine for eslint@8.14.0: wanted: {"node":"^12.22.0 || ^14.17.0 || >=16.0.0"} (current: {"node":"12.18.1","npm":"6.14.17"})
+npm WARN notsup Not compatible with your version of node/npm: eslint@8.14.0
+npm WARN notsup Unsupported engine for @eslint/eslintrc@1.2.2: wanted: {"node":"^12.22.0 || ^14.17.0 || >=16.0.0"} (current: {"node":"12.18.1","npm":"6.14.17"})
+npm WARN notsup Not compatible with your version of node/npm: @eslint/eslintrc@1.2.2
+npm WARN notsup Unsupported engine for eslint-scope@7.1.1: wanted: {"node":"^12.22.0 || ^14.17.0 || >=16.0.0"} (current: {"node":"12.18.1","npm":"6.14.17"})
+npm WARN notsup Not compatible with your version of node/npm: eslint-scope@7.1.1
+npm WARN notsup Unsupported engine for eslint-visitor-keys@3.3.0: wanted: {"node":"^12.22.0 || ^14.17.0 || >=16.0.0"} (current: {"node":"12.18.1","npm":"6.14.17"})
+npm WARN notsup Not compatible with your version of node/npm: eslint-visitor-keys@3.3.0
+npm WARN notsup Unsupported engine for espree@9.3.1: wanted: {"node":"^12.22.0 || ^14.17.0 || >=16.0.0"} (current: {"node":"12.18.1","npm":"6.14.17"})
+npm WARN notsup Not compatible with your version of node/npm: espree@9.3.1
+npm WARN @firebase/database-compat@0.1.8 requires a peer of @firebase/app-compat@0.x but none is installed. You must install peer dependencies yourself.
+
+added 302 packages from 239 contributors and audited 302 packages in 147.304s
+
+28 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+
+i  Writing configuration info to firebase.json...
+i  Writing project information to .firebaserc...
+
+✔  Firebase initialization complete!

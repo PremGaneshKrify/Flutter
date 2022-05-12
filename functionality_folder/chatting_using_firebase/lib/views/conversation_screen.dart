@@ -328,6 +328,9 @@ class _ConversationScreenState extends State<ConversationScreen> {
                           ),
                         ),
                       ),
+                      IconButton(
+                          onPressed: () {},
+                          icon: const Icon(Icons.attach_file)),
                       InkWell(
                         onTap: () {
                           sendNotification(

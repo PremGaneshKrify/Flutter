@@ -3,6 +3,7 @@ import 'package:chatting_using_firebase/helper/constants.dart';
 import 'package:chatting_using_firebase/helper/helperfunctions.dart';
 import 'package:chatting_using_firebase/services/auth.dart';
 import 'package:chatting_using_firebase/services/database.dart';
+import 'package:chatting_using_firebase/views/profile.dart';
 import 'package:chatting_using_firebase/views/searchscreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -101,9 +102,37 @@ class _ChatRoomState extends State<ChatRoom> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text(
-          "Hello    $name",
-          style: const TextStyle(fontWeight: FontWeight.bold),
+        title: Row(
+          children: [
+            InkWell(
+                onTap: (() {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const Profile(),
+                    ),
+                  );
+                }),
+                child: SizedBox(
+                  height: 50,
+                  width: 50,
+                  child: CircleAvatar(
+                    //   radius: 18,
+                    child: ClipOval(
+                      child: Image.network(
+                        'https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',
+                        width: 100,
+                        height: 100,
+                        fit: BoxFit.cover,
+                      ),
+                    ),
+                  ),
+                )),
+            Text(
+              " $name",
+              style: const TextStyle(fontWeight: FontWeight.bold),
+            ),
+          ],
         ),
         backgroundColor: Colors.black,
         actions: [
@@ -227,8 +256,6 @@ class _MessageTileState extends State<MessageTile> {
   String? searchUsertoken;
   @override
   Widget build(BuildContext context) {
-    print(
-        "${widget.userName}-----------------------------------------------------------------------------search user name--------");
     String readTimestamp(int timestamp) {
       var now = DateTime.now();
       var format = DateFormat('HH:mm a');
