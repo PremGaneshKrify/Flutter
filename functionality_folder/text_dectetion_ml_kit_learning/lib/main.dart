@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:google_ml_kit/google_ml_kit.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
 void main() {
@@ -37,106 +38,67 @@ class _MyHomePageState extends State<MyHomePage> {
   bool textScanning = false;
   File? imageFile;
   String scannedText = '';
+  CroppedFile? _croppedFile;
 
-  @override
-  // initState() {
-  //   super.initState();
-
-  //   () async {
-  //     _permissionStatus = await Permission.storage.status;
-
-  //     if (_permissionStatus != PermissionStatus.granted) {
-  //       PermissionStatus permissionStatus = await Permission.storage.request();
-  //       setState(() {
-  //         _permissionStatus = permissionStatus;
-  //       });
-  //     }
-  //   }();
-  // }
+  get pickedImage => imageFile!.path;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // title: Center(child: Text(widget.title)),
-        title: const Center(child: Text('సూపర్‌ స్టార్‌ మహేశ్‌బాబు,')),
+        title: const Center(child: Text('Text Detections images and Speech,')),
       ),
       body: SingleChildScrollView(
-        child: Container(
-          color: Colors.blue,
-          child: Column(
-            children: [
-              if (textScanning) const CircularProgressIndicator(),
-              if (!textScanning && imageFile == null)
-                Container(
-                  height: 300,
-                  width: 300,
-                  color: Colors.grey.shade100,
-                ),
-              if (imageFile != null) Image.file(File(imageFile!.path)),
-              Padding(
-                padding: const EdgeInsets.only(left: 110),
-                child: Container(
-                  child: Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: IconButton(
-                            onPressed: () {
-                              getImage(ImageSource.camera);
-                            },
-                            icon: const Icon(Icons.camera_enhance_rounded)),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: IconButton(
-                            onPressed: () {
-                              print(
-                                  "------------------------gallery-------------");
-                              getImage(ImageSource.gallery);
-                            },
-                            icon: const Icon(Icons.image)),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: IconButton(
-                            onPressed: () {
-                              print("-------------------------------------");
-                            },
-                            icon: const Icon(Icons.mic)),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
+        child: Column(
+          children: [
+            if (textScanning) const CircularProgressIndicator(),
+            if (!textScanning && imageFile == null)
               Container(
-                child: Text(scannedText.toString()),
-              )
-            ],
-          ),
+                height: MediaQuery.of(context).size.height * 0.7,
+                width: MediaQuery.of(context).size.width,
+                color: Colors.grey.shade100,
+                child: const Center(child: Text("Select an image or speak ")),
+              ),
+            if (imageFile != null) Image.file(File(imageFile!.path)),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  IconButton(
+                      onPressed: () {
+                        _cropImage(pickedImage);
+                      },
+                      icon: const Icon(Icons.crop)),
+                  IconButton(
+                      onPressed: () {
+                        getImage(ImageSource.camera);
+                      },
+                      icon: const Icon(Icons.camera_enhance_rounded)),
+                  IconButton(
+                      onPressed: () {
+                        getImage(ImageSource.gallery);
+                      },
+                      icon: const Icon(Icons.image)),
+                  IconButton(onPressed: () {}, icon: const Icon(Icons.mic)),
+                ],
+              ),
+            ),
+            Text(scannedText.toString())
+          ],
         ),
       ),
     );
   }
 
   void getImage(ImageSource source) async {
-    print("------------------------------get image entered-------");
     try {
-      print("----------entered try---------------------------");
       final pickedImage = await ImagePicker().pickImage(source: source);
-      print("-------------------------------------");
       if (pickedImage != null) {
-        print(
-            "---------------------${pickedImage != null}---------pickedImage-------");
-
         setState(() {
           textScanning = true;
           imageFile = File(pickedImage.path);
-          print("--------------------------imagefile.path-----------");
-          print(imageFile!.path);
-          print("-------------------------imagefile.path-----------");
         });
-        getRecognisedText(pickedImage);
       }
     } catch (e) {
       textScanning = false;
@@ -145,13 +107,11 @@ class _MyHomePageState extends State<MyHomePage> {
         scannedText = "Error while scanning";
       });
     }
+    _cropImage(pickedImage);
   }
 
-  void getRecognisedText(XFile image) async {
+  void getRecognisedText(File image) async {
     final inputImage = InputImage.fromFilePath(image.path);
-    print("-------------------------------------");
-    print(inputImage);
-    print("-------------------------------------");
     final textDetector = GoogleMlKit.vision.textRecognizer();
     RecognizedText recognizedText = await textDetector.processImage(inputImage);
 
@@ -164,5 +124,47 @@ class _MyHomePageState extends State<MyHomePage> {
     }
     textScanning = false;
     setState(() {});
+  }
+
+  /// Crop Image
+
+  // Future<void> _cropImage(filePath) async {
+  //   var croppedImage = (await ImageCropper.platform.cropImage(
+  //     sourcePath: filePath,
+  //     maxWidth: 1080,
+  //     maxHeight: 1080,
+  //   ));
+
+  //   setState(() {
+  //     imageFile = croppedImage as File?;
+  //   });
+  // }
+  _cropImage(filePath) async {
+    CroppedFile? croppedFile = await ImageCropper().cropImage(
+      sourcePath: imageFile!.path,
+      aspectRatioPresets: [
+        CropAspectRatioPreset.square,
+        CropAspectRatioPreset.ratio3x2,
+        CropAspectRatioPreset.original,
+        CropAspectRatioPreset.ratio4x3,
+        CropAspectRatioPreset.ratio16x9
+      ],
+      uiSettings: [
+        AndroidUiSettings(
+            // toolbarTitle: 'Cropper',
+            toolbarColor: Colors.deepOrange,
+            toolbarWidgetColor: Colors.white,
+            initAspectRatio: CropAspectRatioPreset.original,
+            lockAspectRatio: false),
+        // IOSUiSettings(
+        //   title: 'Cropper',
+        // ),
+      ],
+    );
+    setState(() {
+      imageFile =
+          croppedFile == null ? File(pickedImage) : File(croppedFile.path);
+    });
+    getRecognisedText(imageFile!);
   }
 }

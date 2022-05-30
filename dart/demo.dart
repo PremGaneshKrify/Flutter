@@ -1,26 +1,34 @@
-// importing dart:io file
-import 'dart:io';
+// // importing dart:io file
+// import 'dart:io';
+
+// void main() {
+//   int prem = 1000000;
+//   int praveen = 2;
+//   int veera = 500000;
+//   int? bal;
+
+//   print("Enter your name?");
+//   // Reading name of the Geek
+//   String? name = stdin.readLineSync();
+//   if (name == "prem") {
+//     print("enter type withdraw or deposit");
+//     String? type = stdin.readLineSync();
+//     print("enter amount");
+//     int? amount = int.parse(stdin.readLineSync().toString());
+
+//     if (type == "withdraw") {
+//       bal = prem - amount;
+//     } else {
+//       bal = prem + amount;
+//     }
+//     print(bal);
+//   }
+// }
 
 void main() {
-  int prem = 1000000;
-  int praveen = 2;
-  int veera = 500000;
-  int? bal;
+  double n1 = 2.123;
 
-  print("Enter your name?");
-  // Reading name of the Geek
-  String? name = stdin.readLineSync();
-  if (name == "prem") {
-    print("enter type withdraw or deposit");
-    String? type = stdin.readLineSync();
-    print("enter amount");
-    int? amount = int.parse(stdin.readLineSync().toString());
+  var value = n1.truncate();
 
-    if (type == "withdraw") {
-      bal = prem - amount;
-    } else {
-      bal = prem + amount;
-    }
-    print(bal);
-  }
+  print("The truncated value of 2.123 = ");
 }

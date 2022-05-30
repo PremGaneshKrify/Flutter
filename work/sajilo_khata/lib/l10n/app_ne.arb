@@ -1,0 +1,12 @@
+ 
+{
+    "language": "यो हाम्रो नेपाली भाषा हो",
+    "helloworld": "नमस्कार संसार",
+    "hello":"नमस्कार",
+    "login": "लग-इन",
+    "enterTenDigitPhoneNumber":"१० अंकको फोन नम्बर",
+    "forgotPassword":"पासवर्ड भुल्नु भयो?",
+    "dontHaveAnAccount": "खाता छैन?",
+    "register": "दर्ता गर्नुहोस्",
+    "passcode": "पासकोड"
+}

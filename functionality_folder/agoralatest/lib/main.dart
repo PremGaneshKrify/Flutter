@@ -1,3 +1,4 @@
+import 'package:agora_uikit/agora_uikit.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -7,7 +8,6 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -30,22 +30,56 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final AgoraClient _client = AgoraClient(
+    agoraConnectionData: AgoraConnectionData(
+        appId: '0a348c70726e4be39fcda8906713c035',
+        channelName: 'fluttering',
+        tempToken:
+            '0060a348c70726e4be39fcda8906713c035IADcbTN0JjTWxLtpG1TlcOR8zO4ghuIfYKRScb0AGfndBr2YShYAAAAAEAA5DUG6Kjx/YgEAAQApPH9i'),
+    enabledPermission: [],
+  );
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    _initAgora();
+  }
+
+  Future<void> _initAgora() async {
+    await _client.initialize();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: const <Widget>[
-            Text(
-              'You have pushed the button this many times:',
+    return WillPopScope(
+      child: Scaffold(
+        // appBar: AppBar(
+        //   automaticallyImplyLeading: false,
+        //   title: const Text('video call'),
+        // ),
+        body: Scaffold(
+            appBar: AppBar(
+              title: Text(widget.title),
             ),
-          ],
-        ),
+            body: SafeArea(
+              child: Stack(children: [
+                AgoraVideoViewer(
+                  client: _client,
+                  layoutType: Layout.floating,
+                  showNumberOfUsers: true,
+                ),
+                AgoraVideoButtons(
+                  client: _client,
+                  enabledButtons: const [
+                    BuiltInButtons.toggleCamera,
+                    BuiltInButtons.callEnd,
+                    BuiltInButtons.toggleMic
+                  ],
+                )
+              ]),
+            )),
       ),
+      onWillPop: () async => false,
     );
   }
 }
