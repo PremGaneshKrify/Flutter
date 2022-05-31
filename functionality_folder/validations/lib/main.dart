@@ -82,7 +82,7 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 String validateMyInput(String value) {
-  Pattern pattern = r"^[a-zA-Z.]{3,15}$";
+  Pattern pattern = r"^[a-zA-Z0-5. ]{3,50}$";
   RegExp regex = RegExp(pattern.toString());
   if (regex.hasMatch(value)) {
     print(regex.hasMatch(value).toString());
